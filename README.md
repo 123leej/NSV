@@ -28,7 +28,7 @@ NOTE : Do not push your virtual environment folder !! (if it comes up to changed
 ### Developing with IDE
 set this python file to interpreter
 ```sh
-venvv/bin/python
+venv/bin/python
 ```
 ### Install packages in virtual environment
 if you installed new package in virtual environment you have to update requirements.txt
