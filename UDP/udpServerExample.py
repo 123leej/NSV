@@ -3,7 +3,7 @@
 sock = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
 
 # Server
-sock.bind(('192.168.43.171', 10000))
+sock.bind(('127.0.0.1', 10000)) #실제 Server IP로 변경
 print("listen: ", 10000)
 while True:
 	data, addr = sock.recvfrom(65535)
