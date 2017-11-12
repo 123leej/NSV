@@ -6,7 +6,7 @@ sock.bind(('', 0))
 
 while True:
 	data = input()
-	sock.sendto(data.encode(), ('192.168.43.171', 10000))
+	sock.sendto(data.encode(), ('127.0.0.1', 10000)) # ServerIP로 변경
 
 	data, addr = sock.recvfrom(65535)
 	print(data.decode())
