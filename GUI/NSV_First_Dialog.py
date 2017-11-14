@@ -5,20 +5,26 @@
 # Created by: PyQt5 UI code generator 5.9.1
 #
 # WARNING! All changes made in this file will be lost!
-
+import sys
+from GUI.NSV_Sync_Dialog import SetAlgorithmUi
+from GUI.NSV_Analysis_Dialog import SetResultDataUi
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(400, 226)
-        self.verticalLayoutWidget = QtWidgets.QWidget(Dialog)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(9, 9, 381, 211))
-        self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.label = QtWidgets.QLabel(self.verticalLayoutWidget)
+
+class NSVUi(object):
+    def setup_ui(self, dialog):
+        dialog.setObjectName("Dialog")
+        dialog.resize(400, 226)
+
+        self.vertical_layout_widget = QtWidgets.QWidget(dialog)
+        self.vertical_layout_widget.setGeometry(QtCore.QRect(9, 9, 381, 211))
+        self.vertical_layout_widget.setObjectName("verticalLayoutWidget")
+
+        self.vertical_layout = QtWidgets.QVBoxLayout(self.vertical_layout_widget)
+        self.vertical_layout.setContentsMargins(0, 0, 0, 0)
+        self.vertical_layout.setObjectName("verticalLayout")
+
+        self.label = QtWidgets.QLabel(self.vertical_layout_widget)
         font = QtGui.QFont()
         font.setPointSize(36)
         font.setBold(True)
@@ -28,57 +34,75 @@ class Ui_Dialog(object):
         self.label.setAutoFillBackground(False)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
-        self.verticalLayout.addWidget(self.label)
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.pushButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton.sizePolicy().hasHeightForWidth())
-        self.pushButton.setSizePolicy(sizePolicy)
+
+        self.vertical_layout.addWidget(self.label)
+        self.horizontal_layout_3 = QtWidgets.QHBoxLayout()
+        self.horizontal_layout_3.setObjectName("horizontalLayout_3")
+
+        self.push_button = QtWidgets.QPushButton(self.vertical_layout_widget)
+        size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        size_policy.setHorizontalStretch(0)
+        size_policy.setVerticalStretch(0)
+        size_policy.setHeightForWidth(self.push_button.sizePolicy().hasHeightForWidth())
+        self.push_button.setSizePolicy(size_policy)
         font = QtGui.QFont()
         font.setPointSize(18)
         font.setBold(True)
         font.setWeight(75)
-        self.pushButton.setFont(font)
-        self.pushButton.setObjectName("pushButton")
-        self.horizontalLayout_3.addWidget(self.pushButton)
-        self.pushButton_2 = QtWidgets.QPushButton(self.verticalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_2.sizePolicy().hasHeightForWidth())
-        self.pushButton_2.setSizePolicy(sizePolicy)
+        self.push_button.setFont(font)
+        self.push_button.setObjectName("pushButton")
+        self.horizontal_layout_3.addWidget(self.push_button)
+        self.push_button.clicked.connect(self.btn1_clicked)
+
+        self.push_button_2 = QtWidgets.QPushButton(self.vertical_layout_widget)
+        size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        size_policy.setHorizontalStretch(0)
+        size_policy.setVerticalStretch(0)
+        size_policy.setHeightForWidth(self.push_button_2.sizePolicy().hasHeightForWidth())
+        self.push_button_2.setSizePolicy(size_policy)
         font = QtGui.QFont()
         font.setPointSize(18)
         font.setBold(True)
         font.setWeight(75)
-        self.pushButton_2.setFont(font)
-        self.pushButton_2.setAutoFillBackground(False)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.horizontalLayout_3.addWidget(self.pushButton_2)
-        self.verticalLayout.addLayout(self.horizontalLayout_3)
+        self.push_button_2.setFont(font)
+        self.push_button_2.setAutoFillBackground(False)
+        self.push_button_2.setObjectName("pushButton_2")
+        self.horizontal_layout_3.addWidget(self.push_button_2)
+        self.push_button.clicked.connect(self.btn2_clicked)
 
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.vertical_layout.addLayout(self.horizontal_layout_3)
 
-    def retranslateUi(self, Dialog):
+        self.translate_ui(dialog)
+        QtCore.QMetaObject.connectSlotsByName(dialog)
+
+    def translate_ui(self, dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.label.setText(_translate("Dialog", "KU-NSV"))
-        self.pushButton.setText(_translate("Dialog", "Sync\n"
-"Simulation"))
-        self.pushButton_2.setText(_translate("Dialog", "Performance\n"
-"Analysis"))
+        self.push_button.setText(_translate("Dialog", "Sync\nSimulation"))
+        self.push_button_2.setText(_translate("Dialog", "Performance\nAnalysis"))
 
+    def btn1_clicked(self):
+        self.get_dialog_event(btn=1)
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())
+    def btn2_clicked(self):
+        self.get_dialog_event(btn=2)
+
+    def get_dialog_event(self, btn):
+        self.dialog = QtWidgets.QDialog()
+
+        if btn == 1:
+            self.child = SetAlgorithmUi()
+        if btn == 2:
+            self.child = SetResultDataUi()
+
+        self.child.setup_ui(self.dialog)
+        self.dialog.show()
+
+    def show(self):
+        app = QtWidgets.QApplication(sys.argv)
+        self.dialog = QtWidgets.QDialog()
+        self.setup_ui(self.dialog)
+        self.dialog.show()
+        sys.exit(app.exec_())
 

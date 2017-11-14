@@ -5,31 +5,35 @@
 # Created by: PyQt5 UI code generator 5.9.1
 #
 # WARNING! All changes made in this file will be lost!
-
+import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(400, 300)
-        self.textBrowser = QtWidgets.QTextBrowser(Form)
-        self.textBrowser.setGeometry(QtCore.QRect(10, 10, 381, 281))
-        self.textBrowser.setObjectName("textBrowser")
+# TODO Ui dosen't show up
+# TODO button event accept -> analysis window
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
 
-    def retranslateUi(self, Form):
+class AnalysisResultUi(object):
+    def setup_ui(self, form):
+        form.setObjectName("Form")
+        form.resize(400, 300)
+
+        self.text_browser = QtWidgets.QTextBrowser(form)
+        self.text_browser.setGeometry(QtCore.QRect(10, 10, 381, 281))
+        self.text_browser.setObjectName("textBrowser")
+
+        self.translate_ui(form)
+        QtCore.QMetaObject.connectSlotsByName(form)
+
+    def translate_ui(self, form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        form.setWindowTitle(_translate("Form", "Form"))
 
 
-if __name__ == "__main__":
-    import sys
+def get_analysis_result_window():
     app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
+    form = QtWidgets.QWidget()
+    ui = AnalysisResultUi()
+    ui.setup_ui(form)
+    form.show()
     sys.exit(app.exec_())
 
