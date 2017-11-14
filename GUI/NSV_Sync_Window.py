@@ -8,43 +8,39 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(771, 516)
-        self.graphicsView = QtWidgets.QGraphicsView(Form)
-        self.graphicsView.setGeometry(QtCore.QRect(5, 11, 761, 441))
-        self.graphicsView.setObjectName("graphicsView")
-        self.horizontalLayoutWidget = QtWidgets.QWidget(Form)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 460, 751, 51))
-        self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.pushButton = QtWidgets.QPushButton(self.horizontalLayoutWidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton.sizePolicy().hasHeightForWidth())
-        self.pushButton.setSizePolicy(sizePolicy)
-        self.pushButton.setObjectName("pushButton")
-        self.horizontalLayout.addWidget(self.pushButton)
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+class SimulatorUi(object):
+    def setup_ui(self, form):
+        form.setObjectName("form")
+        form.resize(771, 516)
 
-    def retranslateUi(self, Form):
+        self.graphics_view = QtWidgets.QGraphicsView(form)
+        self.graphics_view.setGeometry(QtCore.QRect(5, 11, 761, 441))
+        self.graphics_view.setObjectName("graphicsView")
+
+        self.horizontal_layout_widget = QtWidgets.QWidget(form)
+        self.horizontal_layout_widget.setGeometry(QtCore.QRect(10, 460, 751, 51))
+        self.horizontal_layout_widget.setObjectName("horizontalLayoutWidget")
+
+        self.horizontal_layout = QtWidgets.QHBoxLayout(self.horizontal_layout_widget)
+        self.horizontal_layout.setContentsMargins(0, 0, 0, 0)
+        self.horizontal_layout.setObjectName("horizontalLayout")
+
+        self.push_button = QtWidgets.QPushButton(self.horizontal_layout_widget)
+        size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        size_policy.setHorizontalStretch(0)
+        size_policy.setVerticalStretch(0)
+        size_policy.setHeightForWidth(self.push_button.sizePolicy().hasHeightForWidth())
+        self.push_button.setSizePolicy(size_policy)
+        self.push_button.setObjectName("pushButton")
+        self.horizontal_layout.addWidget(self.push_button)
+
+        self.translate_ui(form)
+        QtCore.QMetaObject.connectSlotsByName(form)
+
+    def translate_ui(self, form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.pushButton.setText(_translate("Form", "Summary"))
+        form.setWindowTitle(_translate("Form", "Form"))
+        self.push_button.setText(_translate("Form", "Summary"))
 
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
-    sys.exit(app.exec_())
 

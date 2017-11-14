@@ -8,42 +8,43 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(400, 300)
-        self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
-        self.buttonBox.setGeometry(QtCore.QRect(30, 240, 341, 32))
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
-        self.verticalLayoutWidget = QtWidgets.QWidget(Dialog)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(9, 9, 381, 221))
-        self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.label = QtWidgets.QLabel(self.verticalLayoutWidget)
+# TODO show empty label and beside of it there is button "..." this button event popup file browser
+# TODO update label after "..." button event as set directory
+# TODO SET LABEL location
+# TODO add node parameter setting
+
+
+class SetAlgorithmUi(object):
+    def setup_ui(self, dialog):
+        dialog.setObjectName("Dialog")
+        dialog.resize(400, 300)
+
+        self.button_box = QtWidgets.QDialogButtonBox(dialog)
+        self.button_box.setGeometry(QtCore.QRect(30, 240, 341, 32))
+        self.button_box.setOrientation(QtCore.Qt.Horizontal)
+        self.button_box.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
+        self.button_box.setObjectName("buttonBox")
+
+        self.vertical_layout_widget = QtWidgets.QWidget(dialog)
+        self.vertical_layout_widget.setGeometry(QtCore.QRect(9, 9, 381, 221))
+        self.vertical_layout_widget.setObjectName("verticalLayoutWidget")
+
+        self.vertical_layout = QtWidgets.QVBoxLayout(self.vertical_layout_widget)
+        self.vertical_layout.setContentsMargins(0, 0, 0, 0)
+        self.vertical_layout.setObjectName("verticalLayout")
+        self.label = QtWidgets.QLabel(self.vertical_layout_widget)
         self.label.setObjectName("label")
-        self.verticalLayout.addWidget(self.label)
+        self.vertical_layout.addWidget(self.label)
 
-        self.retranslateUi(Dialog)
-        self.buttonBox.accepted.connect(Dialog.accept)
-        self.buttonBox.rejected.connect(Dialog.reject)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.translate_ui(dialog)
+        self.button_box.accepted.connect(dialog.accept)
+        self.button_box.rejected.connect(dialog.reject)
+        QtCore.QMetaObject.connectSlotsByName(dialog)
 
-    def retranslateUi(self, Dialog):
+    def translate_ui(self, dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.label.setText(_translate("Dialog", "Select Algorithm"))
 
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())
 
