@@ -79,7 +79,7 @@ class SetAlgorithmUi(object):
         self.set_node_num_layer.addWidget(self.node_num)
 
         self.translate_ui(dialog)
-        self.button_box.accepted.connect(dialog.accept)
+        self.button_box.accepted.connect(self.accepted)
         self.button_box.rejected.connect(dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(dialog)
 
@@ -89,9 +89,14 @@ class SetAlgorithmUi(object):
         self.label_1.setText(_translate("Dialog", "Select Algorithm"))
         self.label_2.setText(_translate("Dialog", "Set number of Nodes"))
 
-
     def file_browse(self):
-        self.dialog = QtWidgets.QDialog()
         self.child = FileBrowser()
         self.child.initUI()
         self.file_location.setText(self.child.get_filename())
+
+    def set_parameter(self):
+        self.algorithm_file_path = self.file_location.text()
+        self.number_of_nodes = self.node_num.itemText()
+
+    def get_parameter(self):
+        return {"algorithm_path": self.algorithm_file_path, "number_of_nodes": self.number_of_nodes}
