@@ -99,4 +99,4 @@ class SetAlgorithmUi(object):
         self.number_of_nodes = self.node_num.itemText()
 
     def get_parameter(self):
-        return {"algorithm_path": self.algorithm_file_path, "number_of_nodes": self.number_of_nodes}
+        return {"file_path": self.algorithm_file_path, "number_of_nodes": self.number_of_nodes}

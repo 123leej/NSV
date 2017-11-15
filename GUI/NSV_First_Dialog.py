@@ -106,3 +106,5 @@ class NSVUi(object):
         self.dialog.show()
         sys.exit(app.exec_())
 
+        return self.child.get_parameter()
+
