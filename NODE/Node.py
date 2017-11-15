@@ -18,5 +18,9 @@ class Node:
         # node_num is new Agent's ID.
         print("Node #", self.node_num, " Come In to Agent #", node_num, sep="")
 
+    def node_out(self):
+        print("Node #", self.node_num, " Go Out!")
+
+
 if __name__ == '__main__':
     n = Node(argv)
