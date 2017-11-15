@@ -8,6 +8,9 @@
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+# TODO it must have get_parameter function link with NSV_First_Dialog there is example in NSV_Sync_Dialog
+# TODO get_parameter must return {'file_path': selected file path(string)}
+
 
 class SetResultDataUi(object):
     def setup_ui(self, dialog):
