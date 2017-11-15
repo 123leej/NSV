@@ -105,7 +105,7 @@ class NSVUi(object):
         self.dialog = QtWidgets.QDialog()
         self.setup_ui(self.dialog)
         self.dialog.show()
-        sys.exit(app.exec_())
+        app.exec_()
 
         return self.child.get_parameter()
 
