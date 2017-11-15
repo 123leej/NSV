@@ -78,7 +78,7 @@ class NSVUi(object):
 
     def translate_ui(self, dialog):
         _translate = QtCore.QCoreApplication.translate
-        dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        dialog.setWindowTitle(_translate("Dialog", "KU NSV"))
         self.label.setText(_translate("Dialog", "KU-NSV"))
         self.push_button.setText(_translate("Dialog", "Sync\nSimulation"))
         self.push_button_2.setText(_translate("Dialog", "Performance\nAnalysis"))

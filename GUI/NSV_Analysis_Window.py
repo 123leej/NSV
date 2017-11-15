@@ -26,7 +26,7 @@ class AnalysisResultUi(object):
 
     def translate_ui(self, form):
         _translate = QtCore.QCoreApplication.translate
-        form.setWindowTitle(_translate("Form", "Form"))
+        form.setWindowTitle(_translate("Form", "KU NSV"))
 
 
 def get_analysis_result_window():
