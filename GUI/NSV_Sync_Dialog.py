@@ -79,7 +79,7 @@ class SetAlgorithmUi(object):
         self.set_node_num_layer.addWidget(self.node_num)
 
         self.translate_ui(dialog)
-        self.button_box.accepted.connect(self.accepted)
+        self.button_box.accepted.connect(self.set_parameter)
         self.button_box.rejected.connect(dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(dialog)
 
@@ -91,12 +91,11 @@ class SetAlgorithmUi(object):
 
     def file_browse(self):
         self.child = FileBrowser()
-        self.child.initUI()
         self.file_location.setText(self.child.get_filename())
 
     def set_parameter(self):
         self.algorithm_file_path = self.file_location.text()
-        self.number_of_nodes = self.node_num.itemText()
+        self.number_of_nodes = self.node_num.itemText(0)
 
     def get_parameter(self):
         return {"file_path": self.algorithm_file_path, "number_of_nodes": self.number_of_nodes}
