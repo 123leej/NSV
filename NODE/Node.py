@@ -9,6 +9,26 @@ class Node:
         script, node_num = argv
         self.node_num = node_num
         print("Node #", self.node_num, sep="")
+        # self.isAgent = self.choose_agent()
+        self.isAgent = False
+        self.listen_request()
+
+    def listen_request(self):
+        # This part's code is need to fix later.
+        while True:
+            self.request = input("req('q' to exit): ")
+            if self.request == "q":
+                break
+            if self.isAgent is True:
+                if self.request == "IN":
+                    self.agent_in(12)
+                else:
+                    print("Ignore")
+            else:
+                if self.request == "IN":
+                    self.node_in(12)
+                else:
+                    self.node_out()
 
     def agent_in(self, node_num):
         # node_num is new Node's ID.
