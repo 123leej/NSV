@@ -14,7 +14,12 @@ class Node:
         self.host = socket.gethostname()
         self.port = 20000 + self.node_num
         self.s.connect((self.host, self.port))
+        self.isAgent = self.get_type()
         self.listen_request()
+
+    def get_type(self):
+        devType = self.s.recv(1024).decode()
+        return devType
 
     def listen_request(self):
         # This part's code is need to fix later.
