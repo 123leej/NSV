@@ -1,4 +1,5 @@
 from sys import argv
+import socket
 
 # TODO Define Node Parameters
 
@@ -9,8 +10,10 @@ class Node:
         script, node_num = argv
         self.node_num = node_num
         print("Node #", self.node_num, sep="")
-        # self.isAgent = self.choose_agent()
-        self.isAgent = False
+        self.s = socket.socket()
+        self.host = socket.gethostname()
+        self.port = 20000 + self.node_num
+        self.s.connect((self.host, self.port))
         self.listen_request()
 
     def listen_request(self):
