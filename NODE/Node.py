@@ -19,8 +19,9 @@ class Node:
     def listen_request(self):
         # This part's code is need to fix later.
         while True:
-            self.request = input("req('q' to exit): ")
-            if self.request == "q":
+            self.request = self.s.recv(1024).decode()
+            if self.request == "END":
+                self.s.close()
                 break
             if self.isAgent is True:
                 if self.request == "IN":
