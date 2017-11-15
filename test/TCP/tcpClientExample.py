@@ -1,9 +1,23 @@
 ﻿import socket
 
+host = socket.gethostname()
+port = 8000
+s = socket.socket()
+s.connect((host, port))
+print('Connected to', host)
+init_data=":)"
+s.send(str(init_data).encode('utf-8'))
 
+if s.recv(1024).decode('utf-8'):
+    print(s.recv(1024).decode('utf-8'))
+    s.close()
+
+
+
+'''
 s = socket.socket()
 host = socket.gethostname()
-port = 12222
+port = 8000
 
 s.connect((host, port))
 print( 'Connected to', host)
@@ -14,3 +28,4 @@ while True:
     # Halts
     print ('[Waiting for response...]')
     print ((s.recv(1024)).decode('utf-8'))
+'''
