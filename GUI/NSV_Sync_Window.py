@@ -40,7 +40,7 @@ class SimulatorUi(object):
 
     def translate_ui(self, form):
         _translate = QtCore.QCoreApplication.translate
-        form.setWindowTitle(_translate("Form", "Form"))
+        form.setWindowTitle(_translate("Form", "KU NSV"))
         self.push_button.setText(_translate("Form", "Summary"))
 
 
