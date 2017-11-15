@@ -1,5 +1,5 @@
 import sys
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
 
 
 class FileBrowser(QtWidgets.QWidget):
@@ -13,7 +13,8 @@ class FileBrowser(QtWidgets.QWidget):
         self.init_ui()
 
     def init_ui(self):
-        self.setGeometry(self.left, self.top, self.width, self.height)
+        point = QtCore.QRect(self.left, self.top, self.width, self.height)
+        self.setGeometry(QtCore.QRect(point.center(), point.size()))
         self.open_file_name_dialog()
 
     def open_file_name_dialog(self):
