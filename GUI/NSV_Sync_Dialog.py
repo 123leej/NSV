@@ -5,6 +5,7 @@
 # Created by: PyQt5 UI code generator 5.9.1
 #
 # WARNING! All changes made in this file will be lost!
+import sys
 from GUI.NSV_File_Browser import FileBrowser
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -16,6 +17,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class SetAlgorithmUi(object):
     def setup_ui(self, dialog):
+        self.closer = dialog
         dialog.setObjectName("Dialog")
         dialog.resize(400, 300)
 
@@ -36,12 +38,6 @@ class SetAlgorithmUi(object):
         self.button_box.setOrientation(QtCore.Qt.Horizontal)
         self.button_box.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.button_box.setObjectName("buttonBox")
-
-        #self.grid = QtWidgets.QGridLayout(dialog)
-        #self.grid.addWidget(self.vertical_layout_widget_1, 0, 0)
-        #self.grid.addWidget(self.vertical_layout_widget_2, 1, 0)
-        #self.grid.addWidget(self.vertical_layout_widget_3, 2, 0)
-        #self.grid.addWidget(self.button_box, 3, 0)
 
         self.label_1_layout = QtWidgets.QVBoxLayout(self.vertical_layout_widget_1)
         self.label_1_layout.setContentsMargins(0, 0, 0, 0)
@@ -69,7 +65,7 @@ class SetAlgorithmUi(object):
         self.set_node_num_layer.setContentsMargins(0, 0, 0, 0)
         self.set_node_num_layer.setObjectName("setNodeNumLayer")
         self.label_2 = QtWidgets.QLabel(self.vertical_layout_widget_3)
-        self.label_2.setFixedSize(100, 16)
+        self.label_2.setFixedSize(150, 16)
         self.label_2.setObjectName("label_2")
         self.set_node_num_layer.addWidget(self.label_2)
         self.node_num = QtWidgets.QComboBox(self.vertical_layout_widget_3)
@@ -96,6 +92,10 @@ class SetAlgorithmUi(object):
     def set_parameter(self):
         self.algorithm_file_path = self.file_location.text()
         self.number_of_nodes = self.node_num.itemText(0)
+        if self.algorithm_file_path == "":
+            sys.exit(0)
+        else:
+            self.closer.done(0)
 
     def get_parameter(self):
         return {"file_path": self.algorithm_file_path, "number_of_nodes": self.number_of_nodes}
