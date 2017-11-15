@@ -40,6 +40,7 @@ class NSVUi(object):
         self.horizontal_layout_3.setObjectName("horizontalLayout_3")
 
         self.push_button = QtWidgets.QPushButton(self.vertical_layout_widget)
+        self.push_button.setStyleSheet('QPushButton {color: black;}')
         size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         size_policy.setHorizontalStretch(0)
         size_policy.setVerticalStretch(0)
@@ -55,6 +56,7 @@ class NSVUi(object):
         self.push_button.clicked.connect(self.btn1_clicked)
 
         self.push_button_2 = QtWidgets.QPushButton(self.vertical_layout_widget)
+        self.push_button_2.setStyleSheet('QPushButton {color: black;}')
         size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         size_policy.setHorizontalStretch(0)
         size_policy.setVerticalStretch(0)
@@ -65,7 +67,6 @@ class NSVUi(object):
         font.setBold(True)
         font.setWeight(75)
         self.push_button_2.setFont(font)
-        self.push_button_2.setAutoFillBackground(False)
         self.push_button_2.setObjectName("pushButton_2")
         self.horizontal_layout_3.addWidget(self.push_button_2)
         self.push_button.clicked.connect(self.btn2_clicked)
@@ -99,10 +100,12 @@ class NSVUi(object):
         self.child.setup_ui(self.dialog)
         self.dialog.show()
 
-    def show(self):
+    def start(self):
         app = QtWidgets.QApplication(sys.argv)
         self.dialog = QtWidgets.QDialog()
         self.setup_ui(self.dialog)
         self.dialog.show()
-        sys.exit(app.exec_())
+        app.exec_()
+
+        return self.child.get_parameter()
 
