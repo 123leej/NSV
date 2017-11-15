@@ -1,8 +1,6 @@
 import sys
 from PyQt5 import QtWidgets
 
-# TODO Refactoring
-
 
 class FileBrowser(QtWidgets.QWidget):
     def __init__(self):

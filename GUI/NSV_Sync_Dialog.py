@@ -9,11 +9,6 @@ import sys
 from GUI.NSV_File_Browser import FileBrowser
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-# TODO show empty label and beside of it there is button "..." this button event popup file browser
-# TODO update label after "..." button event as set directory
-# TODO SET LABEL location
-# TODO add node parameter setting
-
 
 class SetAlgorithmUi(object):
     def setup_ui(self, dialog):
