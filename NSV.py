@@ -8,7 +8,6 @@ def selected_menu(param_len):
     }.get(param_len, "Error")
 
 
-
 if __name__ == "__main__":
     NSV = NSVUi()
     params = NSV.start()
