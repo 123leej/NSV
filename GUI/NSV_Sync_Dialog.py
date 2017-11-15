@@ -5,7 +5,7 @@
 # Created by: PyQt5 UI code generator 5.9.1
 #
 # WARNING! All changes made in this file will be lost!
-
+from GUI.NSV_File_Browser import FileBrowser
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 # TODO show empty label and beside of it there is button "..." this button event popup file browser
@@ -62,6 +62,7 @@ class SetAlgorithmUi(object):
         self.browse_button = QtWidgets.QPushButton(self.vertical_layout_widget_2)
         self.browse_button.setText("•••")
         self.browse_button.setFixedSize(30, 20)
+        self.browse_button.clicked.connect(self.file_browse)
         self.file_browser_layout.addWidget(self.browse_button)
 
         self.set_node_num_layer = QtWidgets.QVBoxLayout(self.vertical_layout_widget_3)
@@ -89,3 +90,8 @@ class SetAlgorithmUi(object):
         self.label_2.setText(_translate("Dialog", "Set number of Nodes"))
 
 
+    def file_browse(self):
+        self.dialog = QtWidgets.QDialog()
+        self.child = FileBrowser()
+        self.child.initUI()
+        self.file_location.setText(self.child.get_filename())
