@@ -100,7 +100,7 @@ class NSVUi(object):
         self.child.setup_ui(self.dialog)
         self.dialog.show()
 
-    def show(self):
+    def start(self):
         app = QtWidgets.QApplication(sys.argv)
         self.dialog = QtWidgets.QDialog()
         self.setup_ui(self.dialog)
