@@ -10,6 +10,10 @@ class Node:
         self.node_num = node_num
         print("Node #", self.node_num, sep="")
 
+    def agent_in(self, node_num):
+        # node_num is new Node's ID.
+        print("Agent #", self.node_num, " Detect New Node #", node_num, sep="")
+
 
 if __name__ == '__main__':
     n = Node(argv)
