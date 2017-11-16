@@ -14,6 +14,8 @@ class Simulator:
         self.agent_A = None
         self.agent_B = None
         self.thread_list = []
+        self.log_file = []
+
         app = QtWidgets.QApplication(sys.argv)
         window = QtWidgets.QDialog()
         ui = SimulatorUi()
@@ -23,6 +25,7 @@ class Simulator:
 
     def make_node_threads(self, _number_of_nodes):
         for node_number in range(1, int(_number_of_nodes)):
+            self.open_log_file(node_number+1)
             self.thread_list[node_number] = threading.Thread(target=self.run_node, args=node_number+1)
             self.thread_list[node_number].start()
 
@@ -32,9 +35,20 @@ class Simulator:
                 # TODO save node info
                 pass
             else:
-                log.decode('utf-8')
+                self.write_log(_node_number, log.decode('utf-8'))
 
-    def save_log(self, _node_number):
+    def open_log_file(self, _node_number):
+        self.log_file[_node_number] = open("./log/node" + _node_number + "_log.txt", "a")
+
+    def write_log(self, _node_number, _log):
+        try:
+            self.log_file[_node_number].write(_log + "\n")
+        except ValueError:
+            exit(0)
+
+    def save_logs(self):
+        for i in range(0, len(self.log_file)):
+            self.log_file[i].close()
 
     def run_algorithm(self, _file, _node):
         for idx, data in enumerate(run_process(_file + " " + _node)):
