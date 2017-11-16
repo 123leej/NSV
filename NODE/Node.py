@@ -79,8 +79,11 @@ class Node:
             sock.send(pickle.dumps(self.recentAgent))
         else:
             sock.send(pickle.dumps("None"))
-        self.recentAgent = node_num
+            time.sleep(1)
+            sock.send(pickle.dumps([self.node_num, self.port]))
         sock.close()
+        self.recentAgent = node_num
+        self.agentInfo = [node_num, 20000+node_num]
 
     def node_out(self):
         print("Node #", self.node_num, " Go Out!")
