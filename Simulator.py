@@ -11,25 +11,25 @@ from utill.RunProcess import run_process
 
 class Simulator:
     def __init__(self):
+        self.agent_A = None
+        self.agent_B = None
+        self.thread_list = []
         app = QtWidgets.QApplication(sys.argv)
         window = QtWidgets.QDialog()
         ui = SimulatorUi()
         ui.setup_ui(window)
         window.show()
         sys.exit(app.exec_())
-        self.agent_A = None
-        self.agent_B = None
 
-    def make_threads(self, _number_of_nodes):
-        thread_list = []
+    def make_node_threads(self, _number_of_nodes):
         for node_number in range(1, int(_number_of_nodes)):
-            thread_list[node_number] = threading.Thread(target=self.run_node, args=node_number+1)
-            thread_list[node_number].start()
+            self.thread_list[node_number] = threading.Thread(target=self.run_node, args=node_number+1)
+            self.thread_list[node_number].start()
 
     def run_node(self, _node_number):
         for idx, log in enumerate(run_process("./NODE/node.py "+str(_node_number))):
             if idx is not 0:
-                # TODO save log at log_file
+                # TODO save node info
                 pass
             else:
                 log.decode('utf-8')
