@@ -84,6 +84,7 @@ class Node:
 
     def node_out(self):
         print("Node #", self.node_num, " Go Out!")
+        self.agentInfo = None
 
 
 if __name__ == '__main__':
