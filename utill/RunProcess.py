@@ -10,4 +10,3 @@ def run_process(cmd):
             break
         if output:
             yield output.strip()
-

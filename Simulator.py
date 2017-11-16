@@ -16,10 +16,26 @@ class Simulator:
         ui.setup_ui(window)
         window.show()
         sys.exit(app.exec_())
+        self.agent_A = None
+        self.agent_B = None
 
-    def run_algorithm(self, _file, _node, _port):
-        for data in run_process(_file + " " + _node + " " + str(_port)):
-            self.draw_data(data)
+    def run_node(self, _node_number):
+        for idx, log in enumerate(run_process("./NODE/node.py "+str(_node_number))):
+            if idx is not 0:
+                # TODO save log at log_file
+                pass
+            else:
+                log.decode('utf-8')
+
+    def run_algorithm(self, _file, _node):
+        for idx, data in enumerate(run_process(_file + " " + _node)):
+            if idx is not 0 :
+                self.draw_data(data)
+            else:
+                self.agent_A = data[0]
+                self.agent_A = data[1]
+
+    def set_nodes(self):
 
     def update_nodes(self):
 

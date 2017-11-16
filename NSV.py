@@ -3,6 +3,7 @@ from Simulator import Simulator
 
 PORT = 8000
 
+
 def selected_menu(param_len):
     return {
         1: "Performance_Analysis",
