@@ -1,4 +1,5 @@
 import sys
+import threading
 from PyQt5 import QtWidgets
 from GUI.NSV_Sync_Window import SimulatorUi
 from utill.RunProcess import run_process
@@ -19,6 +20,12 @@ class Simulator:
         self.agent_A = None
         self.agent_B = None
 
+    def make_threads(self, _number_of_nodes):
+        thread_list = []
+        for node_number in range(1, int(_number_of_nodes)):
+            thread_list[node_number] = threading.Thread(target=self.run_node, args=node_number+1)
+            thread_list[node_number].start()
+
     def run_node(self, _node_number):
         for idx, log in enumerate(run_process("./NODE/node.py "+str(_node_number))):
             if idx is not 0:
@@ -26,6 +33,8 @@ class Simulator:
                 pass
             else:
                 log.decode('utf-8')
+
+    def save_log(self, _node_number):
 
     def run_algorithm(self, _file, _node):
         for idx, data in enumerate(run_process(_file + " " + _node)):
