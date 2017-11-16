@@ -1,5 +1,6 @@
 from sys import argv
 import socket
+import pickle
 
 # TODO Define Node Parameters
 
@@ -52,9 +53,9 @@ class Node:
         sock.connect((self.host, 40000+node_num))
         print("Node #", self.node_num, " Come In to Agent #", node_num, sep="")
         if self.recentAgent is not None:
-            sock.send(self.recentAgent.encode())
+            sock.send(pickle.dumps(self.recentAgent))
         else:
-            sock.send("None".encode())
+            sock.send(pickle.dumps("None"))
         self.recentAgent = node_num
         sock.close()
 
