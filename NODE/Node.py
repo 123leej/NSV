@@ -25,17 +25,19 @@ class Node:
         # This part's code is need to fix later.
         while True:
             self.request = self.s.recv(1024).decode()
+            # self.request may contain request value: END, IN, OUT
+            # "IN" type structure: IN_[NODE_NUMBER]
             if self.request == "END":
                 self.s.close()
                 break
             if self.isAgent is True:
-                if self.request == "IN":
-                    self.agent_in(12)
+                if self.request[:2] == "IN":
+                    self.agent_in(int(self.request[3:]))
                 else:
                     print("Ignore")
             else:
-                if self.request == "IN":
-                    self.node_in(12)
+                if self.request[:2] == "IN":
+                    self.node_in(int(self.request[3:]))
                 else:
                     self.node_out()
 
