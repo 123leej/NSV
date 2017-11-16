@@ -16,8 +16,9 @@ class Node:
         self.port = 20000 + self.node_num
         self.s.connect((self.host, self.port))
         self.isAgent = self.get_type()
-        self.listen_request()
         self.recentAgent = None
+        self.nodeList = []
+        self.listen_request()
 
     def get_type(self):
         devType = self.s.recv(1024).decode()
