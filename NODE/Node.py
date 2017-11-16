@@ -45,7 +45,27 @@ class Node:
 
     def agent_in(self, node_num):
         # node_num is new Node's ID.
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((self.host, 40000+node_num))
         print("Agent #", self.node_num, " Detect New Node #", node_num, sep="")
+        rcvData = sock.recv(1024)
+        data = pickle.loads(rcvData)
+        if data == "None":
+            rcvData = sock.recv(1024)
+            data = pickle.loads(rcvData)
+            # data structure: [ [newNodeNum], [newNodePort] ]
+            sock.close()
+        else:
+            # data structure: [ [prevAgentNum], [prevAgentPort] ]
+            prevAgentPort = data[1]
+            sock.close()
+            sock.connect((self.host, 40000+prevAgentPort))
+            sock.send(pickle.dumps(node_num))
+            rcvData = sock.recv(1024)
+            data = pickle.loads(rcvData)
+            # data structure: [ [newNodeNum], [newNodePort] ]
+            sock.close()
+        self.nodeList.append(data)
 
     def node_in(self, node_num):
         # node_num is new Agent's ID.
