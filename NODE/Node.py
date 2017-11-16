@@ -19,6 +19,7 @@ class Node:
         self.isAgent = self.get_type()
         self.recentAgent = None
         self.nodeList = []
+        self.agentInfo = None
         self.listen_request()
 
     def get_type(self):
