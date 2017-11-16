@@ -16,6 +16,7 @@ class Node:
         self.s.connect((self.host, self.port))
         self.isAgent = self.get_type()
         self.listen_request()
+        self.recentAgent = None
 
     def get_type(self):
         devType = self.s.recv(1024).decode()
@@ -47,7 +48,15 @@ class Node:
 
     def node_in(self, node_num):
         # node_num is new Agent's ID.
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((self.host, 40000+node_num))
         print("Node #", self.node_num, " Come In to Agent #", node_num, sep="")
+        if self.recentAgent is not None:
+            sock.send(self.recentAgent.encode())
+        else:
+            sock.send("None".encode())
+        self.recentAgent = node_num
+        sock.close()
 
     def node_out(self):
         print("Node #", self.node_num, " Go Out!")
