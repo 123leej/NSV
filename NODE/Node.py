@@ -2,6 +2,7 @@ from sys import argv
 import socket
 import pickle
 import time
+from datetime import datetime
 
 
 class Node:
@@ -9,7 +10,8 @@ class Node:
         # setup Node
         script, nodeNum = argv
         self.nodeNum = int(nodeNum)
-        print("Node #", self.nodeNum, sep="")
+        self.print_log("SET", self.nodeNum, "", "Node Created.")
+        # print("Node #", self.nodeNum, sep="")
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = socket.gethostname()
         self.port = 20000 + self.nodeNum
@@ -22,6 +24,8 @@ class Node:
 
     def get_type(self):
         devType = pickle.loads(self.s.recv(1024))
+        if devType is True:
+            self.print_log("SET", self.nodeNum, "", "This Node is Agent.")
         return devType
 
     def listen_request(self):
@@ -32,6 +36,7 @@ class Node:
             # "IN" type structure: IN_[NODE_NUMBER]
             if self.request == "END":
                 self.s.close()
+                self.print_log("SET", self.nodeNum, "", "Node Destroyed.")
                 break
             if self.isAgent is True:
                 if self.request[:2] == "IN":
@@ -49,7 +54,7 @@ class Node:
         # nodeNum is new Node's ID.
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((self.host, 40000+nodeNum))
-        print("Agent #", self.nodeNum, " Detect New Node #", nodeNum, sep="")
+        self.print_log("IN", nodeNum, self.nodeNum, "")
         rcvData = sock.recv(1024)
         data = pickle.loads(rcvData)
         if data == "None":
@@ -78,6 +83,7 @@ class Node:
         tgtSock, addr = sock.accept()
         rcvData = tgtSock.recv(1024)
         nodeNum = pickle.loads(rcvData)
+        self.print_log("GET_REQ", "", self.nodeNum, "Request "+str(nodeNum)+" info.")
         nodeIndex = 0
         for i in self.nodeList:
             if i[0] == nodeNum:
@@ -91,7 +97,7 @@ class Node:
         # nodeNum is new Agent's ID.
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((self.host, 40000+nodeNum))
-        print("Node #", self.nodeNum, " Come In to Agent #", nodeNum, sep="")
+        self.print_log("IN", self.nodeNum, nodeNum, "")
         if self.recentAgent is not None:
             sock.send(pickle.dumps(self.recentAgent))
         else:
@@ -103,8 +109,12 @@ class Node:
         self.agentInfo = [nodeNum, 20000+nodeNum]
 
     def node_out(self):
-        print("Node #", self.nodeNum, " Go Out!")
+        self.print_log("OUT", self.nodeNum, self.recentAgent, "")
         self.agentInfo = None
+
+    def print_log(self, cmd, dataFrom, dataTo, details):
+        now = datetime.now().strftime("%H:%M:%S")
+        print(now, cmd, dataFrom, dataTo, details, sep="|")
 
 
 if __name__ == '__main__':
