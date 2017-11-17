@@ -64,26 +64,33 @@ class Node:
             sock.close()
         else:
             # data structure: [ [prevAgentNum], [prevAgentPort] ]
+            prevAgentNum = data[0]
             prevAgentPort = data[1]
             sock.close()
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.connect((self.host, 40000+prevAgentPort))
             sock.send(pickle.dumps(nodeNum))
+            self.print_log("SEND", self.nodeNum, prevAgentNum,
+                "Request Node's Info to Prev Agent.")
             rcvData = sock.recv(1024)
+            self.print_log("RECV", prevAgentNum, self.nodeNum,
+                "Receive Node's Info from Prev Agent.")
             data = pickle.loads(rcvData)
             # data structure: [ [newNodeNum], [newNodePort] ]
             sock.close()
         self.nodeList.append(data)
+        self.print_log("SET", self.nodeNum, "", "Agent Update Node List.")
 
     def prev_agent(self):
-        print("Agent #", self.nodeNum, " Get Signal", sep="")
+        # print("Agent #", self.nodeNum, " Get Signal", sep="")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.bind(('', 40000+self.port))
         sock.listen(5)
         tgtSock, addr = sock.accept()
         rcvData = tgtSock.recv(1024)
         nodeNum = pickle.loads(rcvData)
-        self.print_log("GET_REQ", "", self.nodeNum, "Request "+str(nodeNum)+" info.")
+        self.print_log("GET_REQ", "", self.nodeNum,
+            "Request Node #"+str(nodeNum)+" info.")
         nodeIndex = 0
         for i in self.nodeList:
             if i[0] == nodeNum:
@@ -92,6 +99,7 @@ class Node:
             nodeIndex += 1
         tgtSock.close()
         self.nodeList.remove(nodeIndex)
+        self.print_log("SET", self.nodeNum, "", "Prev Agent Delete Node.")
 
     def node_in(self, nodeNum):
         # nodeNum is new Agent's ID.
