@@ -5,7 +5,7 @@ from PyQt5 import QtWidgets
 
 from GUI.NSV_Sync_Window import SimulatorUi
 from util.RunProcess import run_process
-
+from util.KillProcess import kill_process
 
 # TODO UPDATE NODES : receive data format ([[node_idx, x, y, len_from_agentA, len_from_agentB],[node_idx, x, y, len_from_agentA, len_from_agentB],[node_idx, x, y, len_from_agentA, len_from_agentB],[node_idx, x, y, len_from_agentA, len_from_agentB],[node_idx, x, y, len_from_agentA, len_from_agentB],[node_idx, x, y, len_from_agentA, len_from_agentB],[node_idx, x, y, len_from_agentA, len_from_agentB],[node_idx, x, y, len_from_agentA, len_from_agentB],[node_idx, x, y, len_from_agentA, len_from_agentB],[node_idx, x, y, len_from_agentA, len_from_agentB],.....] )
 # TODO UPDATE NODES : set Node number as ObjectName, draw Nodes by x, y  agnet_list = [num1, num2] -> receive_data[num1], receive_data[num2] set as a bigger circle?
@@ -60,6 +60,13 @@ class Simulator:
             else:
                 self.agent_A = data[0]
                 self.agent_A = data[1]
+
+    def stop_algorithm_process(self, _file):
+        import os
+
+        non_extension = os.path.splitext(_file)[0]
+        process_name = os.path.split(non_extension)[1]
+        kill_process(process_name)
 
     def set_nodes(self):
 
