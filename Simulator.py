@@ -1,3 +1,4 @@
+import os
 import sys
 import threading
 
@@ -31,6 +32,11 @@ class Simulator:
             self.open_log_file(node_number+1)
             self.thread_list[node_number] = threading.Thread(target=self.run_node, args=node_number+1)
             self.thread_list[node_number].start()
+
+    def stop_algorithm(self, _file):
+        non_extension = os.path.splitext(_file)[0]
+        process_name = os.path.split(non_extension)[1]
+        kill_process(process_name)
 
     def run_node(self, _node_number):
         for idx, log in enumerate(run_process("./NODE/node.py "+str(_node_number))):
