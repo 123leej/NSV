@@ -1,5 +1,6 @@
 import os
 import sys
+import datetime
 import threading
 
 from PyQt5 import QtWidgets
@@ -70,16 +71,15 @@ class Simulator:
                 self.agent_A = data[0]
                 self.agent_A = data[1]
 
-    def stop_algorithm_process(self, _file):
-        import os
 
-        non_extension = os.path.splitext(_file)[0]
-        process_name = os.path.split(non_extension)[1]
-        kill_process(process_name)
 
-    def set_nodes(self):
-
-    def update_nodes(self):
-
-# for test - it will run in NSV
-Simulator()
+    def merge_log_files(self):
+        with open("./log/"+datetime.datetime.now().strftime('%Y-%m-%d')+"_simulation", "w") as result_file:
+            for i in range(0, len(self.log_file)):
+                with open("./log/"+self.log_file[i], "r") as node_log_file:
+                    while True:
+                        temp = node_log_file.readline()
+                        if not temp:
+                            result_file.write('\n')
+                        result_file.write(temp)
+        # TODO PARSE log datas by timelaps
