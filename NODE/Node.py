@@ -9,12 +9,12 @@ import time
 class Node:
     def __init__(self, argv):
         # setup Node
-        script, node_num = argv
-        self.node_num = node_num
-        print("Node #", self.node_num, sep="")
+        script, nodeNum = argv
+        self.nodeNum = nodeNum
+        print("Node #", self.nodeNum, sep="")
         self.s = socket.socket()
         self.host = socket.gethostname()
-        self.port = 20000 + self.node_num
+        self.port = 20000 + self.nodeNum
         self.s.connect((self.host, self.port))
         self.isAgent = self.get_type()
         self.recentAgent = None
@@ -47,11 +47,11 @@ class Node:
                 else:
                     self.node_out()
 
-    def agent_in(self, node_num):
-        # node_num is new Node's ID.
+    def agent_in(self, nodeNum):
+        # nodeNum is new Node's ID.
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((self.host, 40000+node_num))
-        print("Agent #", self.node_num, " Detect New Node #", node_num, sep="")
+        sock.connect((self.host, 40000+nodeNum))
+        print("Agent #", self.nodeNum, " Detect New Node #", nodeNum, sep="")
         rcvData = sock.recv(1024)
         data = pickle.loads(rcvData)
         if data == "None":
@@ -64,7 +64,7 @@ class Node:
             prevAgentPort = data[1]
             sock.close()
             sock.connect((self.host, 40000+prevAgentPort))
-            sock.send(pickle.dumps(node_num))
+            sock.send(pickle.dumps(nodeNum))
             rcvData = sock.recv(1024)
             data = pickle.loads(rcvData)
             # data structure: [ [newNodeNum], [newNodePort] ]
@@ -72,39 +72,39 @@ class Node:
         self.nodeList.append(data)
 
     def prev_agent(self):
-        print("Agent #", self.node_num, " Get Signal", sep="")
+        print("Agent #", self.nodeNum, " Get Signal", sep="")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.bind(('', 40000+self.port))
         sock.listen(5)
         tgtSock, addr = sock.accept()
         rcvData = tgtSock.recv(1024)
-        node_num = pickle.loads(rcvData)
+        nodeNum = pickle.loads(rcvData)
         nodeIndex = 0
         for i in self.nodeList:
-            if i[0] == node_num:
+            if i[0] == nodeNum:
                 tgtSock.send(pickle.loads(i))
                 break
             nodeIndex += 1
         tgtSock.close()
         self.nodeList.remove(nodeIndex)
 
-    def node_in(self, node_num):
-        # node_num is new Agent's ID.
+    def node_in(self, nodeNum):
+        # nodeNum is new Agent's ID.
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((self.host, 40000+node_num))
-        print("Node #", self.node_num, " Come In to Agent #", node_num, sep="")
+        sock.connect((self.host, 40000+nodeNum))
+        print("Node #", self.nodeNum, " Come In to Agent #", nodeNum, sep="")
         if self.recentAgent is not None:
             sock.send(pickle.dumps(self.recentAgent))
         else:
             sock.send(pickle.dumps("None"))
             time.sleep(1)
-            sock.send(pickle.dumps([self.node_num, self.port]))
+            sock.send(pickle.dumps([self.nodeNum, self.port]))
         sock.close()
-        self.recentAgent = node_num
-        self.agentInfo = [node_num, 20000+node_num]
+        self.recentAgent = nodeNum
+        self.agentInfo = [nodeNum, 20000+nodeNum]
 
     def node_out(self):
-        print("Node #", self.node_num, " Go Out!")
+        print("Node #", self.nodeNum, " Go Out!")
         self.agentInfo = None
 
 
