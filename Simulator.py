@@ -1,6 +1,7 @@
 import os
 import sys
 import threading
+import socket
 
 from PyQt5 import QtWidgets
 
@@ -8,12 +9,15 @@ from Gui.NSV_Sync_Window import SimulatorUi
 from Util.RunProcess import run_process
 from Util.KillProcess import kill_process
 from Util.LogManager import LogManager
+from Util.MakeSocket import make_socket_object
 
 # TODO set Zone range???????
 
 class Simulator:
     def __init__(self):
         self.zone_range = 150
+        self.node_info = {}
+        self.linked_socket = {}
         self.thread_list = []
         self.log_manager = LogManager()
 
@@ -52,6 +56,7 @@ class Simulator:
             if idx is not 0:
                 self.log_manager.write_log(_node_number, log)
             else:
+                self.linked_socket[str(_node_number)] = make_socket_object(log)
 
     def stop_node(self, _number_of_nodes):
         # TODO send (all_sock, {"msg": "END"})
