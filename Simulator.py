@@ -26,9 +26,9 @@ class Simulator:
         sys.exit(app.exec_())
 
     def make_node_threads(self, _number_of_nodes):
-        for node_number in range(1, int(_number_of_nodes)):
+        for node_number in range(0, int(_number_of_nodes)):
             self.open_log_file(node_number+1)
-            self.thread_list[node_number] = threading.Thread(target=self.run_node, args=node_number+1)
+            self.thread_list.append(threading.Thread(target=self.run_node, args=node_number+1))
             self.thread_list[node_number].start()
 
     def run_algorithm(self, _file, _node):
@@ -51,6 +51,14 @@ class Simulator:
                 pass
             else:
                 self.write_log(_node_number, log.decode('utf-8'))
+
+    def stop_node(self, _number_of_nodes):
+        # TODO Edit after send signal
+
+    def stop_all_simulation(self, _file, _number_of_nodes):
+        self.stop_algorithm(_file)
+        self.stop_node(_number_of_nodes)
+        self.merge_log_files()
 
     def open_log_file(self, _node_number):
         self.log_file.append("node" + str(_node_number) + "_log.txt")
