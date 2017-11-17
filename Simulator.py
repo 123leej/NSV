@@ -33,10 +33,9 @@ class Simulator:
     def run_algorithm(self, _file, _node):
         for idx, data in enumerate(run_process(_file + " " + _node)):
             if idx is not 0 :
-                self.window.node_update(self.graphics_view, self.graphics_scene)
+                self.window.node_update(self.graphics_view, self.graphics_scene, data)
             else:
-                self.agent_A = data[0]
-                self.agent_A = data[1]
+                self.window.draw_nodes(data[0], data[1], data[2:])
 
     def stop_algorithm(self, _file):
         non_extension = os.path.splitext(_file)[0]
@@ -46,10 +45,10 @@ class Simulator:
     def run_node(self, _node_number):
         for idx, log in enumerate(run_process("./NODE/node.py "+str(_node_number))):
             if idx is not 0:
+                self.log_manager.write_log(_node_number, log.decode('utf-8'))
+            else:
                 # TODO save node info
                 pass
-            else:
-                self.log_manager.write_log(_node_number, log.decode('utf-8'))
 
     def stop_node(self, _number_of_nodes):
         # TODO Edit after send signal
