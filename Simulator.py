@@ -18,10 +18,10 @@ class Simulator:
         self.log_manager = LogManager()
 
         app = QtWidgets.QApplication(sys.argv)
-        window = QtWidgets.QDialog()
-        ui = SimulatorUi()
-        ui.setup_ui(window)
-        window.show()
+        dialog = QtWidgets.QDialog()
+        self.window = SimulatorUi()
+        self.graphics_view, self.graphics_scene = self.window.setup_ui(dialog)
+        dialog.show()
         sys.exit(app.exec_())
 
     def make_node_threads(self, _number_of_nodes):
@@ -33,7 +33,7 @@ class Simulator:
     def run_algorithm(self, _file, _node):
         for idx, data in enumerate(run_process(_file + " " + _node)):
             if idx is not 0 :
-                # TODO Edit after drawing nodes objects
+                self.window.node_update(self.graphics_view, self.graphics_scene)
             else:
                 self.agent_A = data[0]
                 self.agent_A = data[1]
