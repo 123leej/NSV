@@ -1,4 +1,4 @@
-from GUI.NSV_First_Dialog import NSVUi
+from Gui.NSV_First_Dialog import NSVUi
 from Simulator import Simulator
 
 PORT = 8000

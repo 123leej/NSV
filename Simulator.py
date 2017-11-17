@@ -5,9 +5,10 @@ import threading
 
 from PyQt5 import QtWidgets
 
-from GUI.NSV_Sync_Window import SimulatorUi
-from util.RunProcess import run_process
-from util.KillProcess import kill_process
+from Gui.NSV_Sync_Window import SimulatorUi
+from Util.RunProcess import run_process
+from Util.KillProcess import kill_process
+from Util.LogManager import LogManager
 
 
 class Simulator:

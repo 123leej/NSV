@@ -6,8 +6,8 @@
 #
 # WARNING! All changes made in this file will be lost!
 import sys
-from GUI.NSV_Sync_Dialog import SetAlgorithmUi
-from GUI.NSV_Analysis_Dialog import SetResultDataUi
+from Gui.NSV_Sync_Dialog import SetAlgorithmUi
+from Gui.NSV_Analysis_Dialog import SetResultDataUi
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
