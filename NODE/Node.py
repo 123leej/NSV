@@ -10,12 +10,13 @@ class Node:
         # setup Node
         script, nodeNum = argv
         self.nodeNum = int(nodeNum)
-        self.print_log("SET", self.nodeNum, "", "Node Created.")
         # print("Node #", self.nodeNum, sep="")
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = socket.gethostname()
         self.port = 20000 + self.nodeNum
+        print(self.port)
         self.s.connect((self.host, self.port))
+        self.print_log("SET", self.nodeNum, "", "Node Created.")
         self.isAgent = self.get_type()
         self.recentAgent = None
         self.nodeList = []
