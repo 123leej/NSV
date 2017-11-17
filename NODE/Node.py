@@ -99,6 +99,7 @@ class Node:
                 break
             nodeIndex += 1
         tgtSock.close()
+        sock.close()
         self.nodeList.remove(nodeIndex)
         self.print_log("SET", self.nodeNum, "", "Prev Agent Delete Node.")
 
