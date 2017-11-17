@@ -3,8 +3,6 @@ import socket
 import pickle
 import time
 
-# TODO Define Node Parameters
-
 
 class Node:
     def __init__(self, argv):
@@ -63,6 +61,7 @@ class Node:
             # data structure: [ [prevAgentNum], [prevAgentPort] ]
             prevAgentPort = data[1]
             sock.close()
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.connect((self.host, 40000+prevAgentPort))
             sock.send(pickle.dumps(nodeNum))
             rcvData = sock.recv(1024)
