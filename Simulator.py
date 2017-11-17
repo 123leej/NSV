@@ -9,11 +9,11 @@ from Util.RunProcess import run_process
 from Util.KillProcess import kill_process
 from Util.LogManager import LogManager
 
+# TODO set Zone range???????
 
 class Simulator:
     def __init__(self):
-        self.agent_A = None
-        self.agent_B = None
+        self.zone_range = 150
         self.thread_list = []
         self.log_manager = LogManager()
 
@@ -32,10 +32,14 @@ class Simulator:
 
     def run_algorithm(self, _file, _node):
         for idx, data in enumerate(run_process(_file + " " + _node)):
+            data = data.decode('utf-8')
             if idx is not 0 :
+                self.detect_event(data)
                 self.window.node_update(self.graphics_view, self.graphics_scene, data)
             else:
+                self.detect_event(data)
                 self.window.draw_nodes(data[0], data[1], data[2:])
+
 
     def stop_algorithm(self, _file):
         non_extension = os.path.splitext(_file)[0]
@@ -44,16 +48,36 @@ class Simulator:
 
     def run_node(self, _node_number):
         for idx, log in enumerate(run_process("./NODE/node.py "+str(_node_number))):
+            log.decode('utf-8')
             if idx is not 0:
-                self.log_manager.write_log(_node_number, log.decode('utf-8'))
+                self.log_manager.write_log(_node_number, log)
             else:
-                # TODO save node info
-                pass
 
     def stop_node(self, _number_of_nodes):
-        # TODO Edit after send signal
+        # TODO send (all_sock, {"msg": "END"})
 
     def stop_all_simulation(self, _file, _number_of_nodes):
         self.stop_algorithm(_file)
         self.stop_node(_number_of_nodes)
         self.log_manager.merge_log_files()
+
+    def detect_event(self, _data):
+        for node_info in _data:
+            len_from_a = node_info[3]
+            len_from_b = node_info[4]
+
+            if len_from_a > self.zone_range and len_from_b > self.zone_range:
+                # TODO send (node_info[0]_sock, {"msg": "OUT"})
+            else:
+                if len_from_a > len_from_b:
+                    # TODO get node info if recent_agent was a & agent was not b(send a_sock, {"msg": "REQ"})
+
+                    # TODO get node info if agent was not b (send b_sock, {"node_num": node_info[0], "msg": "IN"})
+                    # TODO get node info if agent was not b (send node_info[0]_sock, {"node_num": node_info[0], "msg": "IN"})
+                if len_from_a < len_from_b:
+                    # TODO get node info if recent_agent was b & agent was not a(send b_sock, {"msg": "REQ"})
+
+                    # TODO get node info if agent was not a (send a_sock, {"node_num": node_info[0], "msg": "IN"})
+                    # TODO get node info if agent was not a (send node_info[0]_sock, {"node_num": node_info[0], "msg": "IN"})
+
+    def set_nodes(self, _info):
