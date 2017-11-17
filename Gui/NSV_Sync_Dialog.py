@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 import sys
-from GUI.NSV_File_Browser import FileBrowser
+from Gui.NSV_File_Browser import FileBrowser
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
