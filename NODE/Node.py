@@ -39,7 +39,8 @@ class Node:
                 if self.request[:2] == "IN":
                     self.agent_in(int(self.request[3:]))
                 else:
-                    print("Ignore")
+                    # This is for Previous Agent
+                    self.prev_agent()
             else:
                 if self.request[:2] == "IN":
                     self.node_in(int(self.request[3:]))
