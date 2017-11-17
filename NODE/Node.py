@@ -15,7 +15,12 @@ class Node:
         self.host = socket.gethostname()
         self.port = 20000 + self.nodeNum
         print(self.port)
-        self.s.connect((self.host, self.port))
+        while True:
+            try:
+                self.s.connect((self.host, self.port))
+                break
+            except:
+                pass
         self.print_log("SET", self.nodeNum, "", "Node Created.")
         self.isAgent = self.get_type()
         self.recentAgent = None
