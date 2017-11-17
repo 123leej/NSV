@@ -1,3 +1,4 @@
+import time
 import datetime
 from Exception.NSVExceptions import LogFileWriteError
 
@@ -24,7 +25,8 @@ class LogManager:
         self.log_file_buffer = None
 
     def merge_log_files(self):
-        with open("./log/" + datetime.datetime.now().strftime('%Y-%m-%d') + "_simulation", "w") as result_file:
+        result_file_name = datetime.datetime.now().strftime('%Y-%m-%d') + "_simulation.txt"
+        with open("./log/" + result_file_name, "w") as result_file:
             for i in range(0, len(self.log_file)):
                 with open("./log/" + self.log_file[i], "r") as node_log_file:
                     while True:
@@ -32,5 +34,28 @@ class LogManager:
                         if not temp:
                             result_file.write('\n')
                         result_file.write(temp)
-                        # TODO PARSE log datas by timelaps
 
+        self.log_parser(result_file_name)
+
+    def log_parser(self, _result):
+        log_buffer = []
+        with open("./log/" + _result, "r") as result_file:
+            while True:
+                temp = result_file.readline()
+                if not temp:
+                    break
+                log_buffer.append(temp)
+
+        log_buffer = self.parsing(log_buffer)
+
+        with open("./log/" + _result, "w") as result_file:
+            for log in log_buffer:
+                result_file.write(log)
+
+    def parsing(self, _log_buffer):
+        return sorted(_log_buffer, key=self.time_to_stamp)
+
+    def time_to_stamp(self, _log):
+        temp = _log.split("|")[0]
+        stamp = time.mktime(datetime.datetime.strptime(temp, "%H:%M:%S").timetuple())
+        return stamp
