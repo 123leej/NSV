@@ -10,9 +10,9 @@ class Node:
     def __init__(self, argv):
         # setup Node
         script, nodeNum = argv
-        self.nodeNum = nodeNum
+        self.nodeNum = int(nodeNum)
         print("Node #", self.nodeNum, sep="")
-        self.s = socket.socket()
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = socket.gethostname()
         self.port = 20000 + self.nodeNum
         self.s.connect((self.host, self.port))
