@@ -70,6 +70,23 @@ class Node:
             sock.close()
         self.nodeList.append(data)
 
+    def prev_agent(self):
+        print("Agent #", self.node_num, " Get Signal", sep="")
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.bind(('', 40000+self.port))
+        sock.listen(5)
+        tgtSock, addr = sock.accept()
+        rcvData = tgtSock.recv(1024)
+        node_num = pickle.loads(rcvData)
+        nodeIndex = 0
+        for i in self.nodeList:
+            if i[0] == node_num:
+                tgtSock.send(pickle.loads(i))
+                break
+            nodeIndex += 1
+        tgtSock.close()
+        self.nodeList.remove(nodeIndex)
+
     def node_in(self, node_num):
         # node_num is new Agent's ID.
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
