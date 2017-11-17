@@ -53,6 +53,9 @@ class Simulator:
         for i in range(0, len(self.log_file)):
             self.log_file[i].close()
 
+    def merge_log_files(self):
+        self.log_file
+
     def run_algorithm(self, _file, _node):
         for idx, data in enumerate(run_process(_file + " " + _node)):
             if idx is not 0 :
