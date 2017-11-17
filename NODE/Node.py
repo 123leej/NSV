@@ -23,13 +23,13 @@ class Node:
         self.listen_request()
 
     def get_type(self):
-        devType = self.s.recv(1024).decode()
+        devType = pickle.loads(self.s.recv(1024))
         return devType
 
     def listen_request(self):
         # This part's code is need to fix later.
         while True:
-            self.request = self.s.recv(1024).decode()
+            self.request = pickle.loads(self.s.recv(1024))
             # self.request may contain request value: END, IN, OUT
             # "IN" type structure: IN_[NODE_NUMBER]
             if self.request == "END":
