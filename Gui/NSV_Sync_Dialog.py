@@ -21,12 +21,16 @@ class SetAlgorithmUi(object):
         self.vertical_layout_widget_1.setObjectName("verticalLayoutWidget1")
 
         self.vertical_layout_widget_2 = QtWidgets.QWidget(dialog)
-        self.vertical_layout_widget_2.setGeometry(QtCore.QRect(9, 29, 381, 90))
+        self.vertical_layout_widget_2.setGeometry(QtCore.QRect(9, 29, 381, 30))
         self.vertical_layout_widget_2.setObjectName("verticalLayoutWidget2")
 
         self.vertical_layout_widget_3 = QtWidgets.QWidget(dialog)
-        self.vertical_layout_widget_3.setGeometry(QtCore.QRect(9, 119, 381, 110))
+        self.vertical_layout_widget_3.setGeometry(QtCore.QRect(9, 59, 381, 50))
         self.vertical_layout_widget_3.setObjectName("verticalLayoutWidget3")
+
+        self.vertical_layout_widget_4 = QtWidgets.QWidget(dialog)
+        self.vertical_layout_widget_4.setGeometry(QtCore.QRect(9, 109, 381, 150))
+        self.vertical_layout_widget_4.setObjectName("verticalLayoutWidget4")
 
         self.button_box = QtWidgets.QDialogButtonBox(dialog)
         self.button_box.setGeometry(QtCore.QRect(30, 240, 341, 32))
@@ -56,18 +60,35 @@ class SetAlgorithmUi(object):
         self.browse_button.clicked.connect(self.file_browse)
         self.file_browser_layout.addWidget(self.browse_button)
 
-        self.set_node_num_layer = QtWidgets.QVBoxLayout(self.vertical_layout_widget_3)
-        self.set_node_num_layer.setContentsMargins(0, 0, 0, 0)
-        self.set_node_num_layer.setObjectName("setNodeNumLayer")
+        self.set_node_num_layout = QtWidgets.QVBoxLayout(self.vertical_layout_widget_3)
+        self.set_node_num_layout.setContentsMargins(0, 0, 0, 0)
+        self.set_node_num_layout.setObjectName("setNodeNumLayer")
         self.label_2 = QtWidgets.QLabel(self.vertical_layout_widget_3)
         self.label_2.setFixedSize(150, 16)
         self.label_2.setObjectName("label_2")
-        self.set_node_num_layer.addWidget(self.label_2)
+        self.set_node_num_layout.addWidget(self.label_2)
         self.node_num = QtWidgets.QComboBox(self.vertical_layout_widget_3)
         self.node_num.setFixedSize(100, 20)
         self.node_num.addItems(["10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"])
         self.node_num.setObjectName("nodeNum")
-        self.set_node_num_layer.addWidget(self.node_num)
+        self.set_node_num_layout.addWidget(self.node_num)
+
+        self.set_zone_range_layout = QtWidgets.QVBoxLayout(self.vertical_layout_widget_4)
+        self.set_zone_range_layout.setContentsMargins(0, 0, 0, 0)
+        self.set_zone_range_layout.setAlignment(QtCore.Qt.AlignTop)
+        self.set_zone_range_layout.setObjectName("setZoneRangeLayer")
+        self.label_3 = QtWidgets.QLabel(self.vertical_layout_widget_4)
+        self.label_3.setFixedSize(150, 16)
+        self.label_3.setObjectName("label_3")
+        self.set_zone_range_layout.addWidget(self.label_3)
+        self.zone_range_bar = QtWidgets.QSlider(self.vertical_layout_widget_4)
+        self.zone_range_bar.setRange(50, 300)
+        self.zone_range_bar.setValue(100)
+        self.zone_range = self.zone_range_bar.value()
+        self.zone_range_bar.setOrientation(QtCore.Qt.Horizontal)
+        self.zone_range_bar.valueChanged.connect(self.slider_event)
+        self.zone_range_bar.setObjectName("zoneRangeBar")
+        self.set_zone_range_layout.addWidget(self.zone_range_bar)
 
         self.translate_ui(dialog)
         self.button_box.accepted.connect(self.set_parameter)
@@ -79,6 +100,10 @@ class SetAlgorithmUi(object):
         dialog.setWindowTitle(_translate("KU_NSV", "KU NSV"))
         self.label_1.setText(_translate("Dialog", "Select Algorithm"))
         self.label_2.setText(_translate("Dialog", "Set number of Nodes"))
+        self.label_3.setText(_translate("Dialog", "Zone range (50 ~ 300)"))
+
+    def slider_event(self):
+        self.zone_range = self.zone_range_bar.value()
 
     def file_browse(self):
         self.child = FileBrowser()
@@ -87,9 +112,6 @@ class SetAlgorithmUi(object):
     def set_parameter(self):
         self.algorithm_file_path = self.file_location.text()
         self.number_of_nodes = self.node_num.itemText(0)
-        self.zone_range = ###UI for zone range
-
-        # TODO set zone range
 
         if self.algorithm_file_path == "":
             sys.exit(0)
@@ -100,5 +122,6 @@ class SetAlgorithmUi(object):
         return {
             "file_path": self.algorithm_file_path,
             "number_of_nodes": self.number_of_nodes,
-            "zone_range": self.zone_range
+            "zone_range": self.zone_range,
+            "flag": 1
         }

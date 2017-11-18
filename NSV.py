@@ -5,24 +5,24 @@ from Exception.NSVExceptions import SimulationFinishException
 PORT = 8000
 
 
-def selected_menu(param_len):
+def selected_menu(menu):
     return {
-        1: "Performance_Analysis",
-        2: "Sync_Simulation"
-    }.get(param_len, "Error")
+        1: "Sync_Simulation",
+        2: "Performance_Analysis"
+    }.get(menu, "Error")
 
 
 if __name__ == "__main__":
     simulator = None
-    
+
     NSV = NSVUi()
     params = NSV.start()
 
-    if selected_menu(len(params)) is "Sync_Simulation":
+    if selected_menu(params['flag']) is "Sync_Simulation":
         algorithm_file_path = params["file_path"]
         number_of_node = params["number_of_nodes"]
         zone_range = params["zone_range"]
-
+'''
         try:
             simulator = Simulator()
             simulator.make_node_threads(number_of_node)
@@ -36,3 +36,4 @@ if __name__ == "__main__":
 
     if selected_menu(len(params)) is "Performance_Analysis":
         result_data_path = params["file_path"]
+'''
