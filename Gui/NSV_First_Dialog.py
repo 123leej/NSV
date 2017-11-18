@@ -94,6 +94,7 @@ class NSVUi(object):
 
         if btn == 1:
             self.child = SetAlgorithmUi()
+
         if btn == 2:
             self.child = SetResultDataUi()
 

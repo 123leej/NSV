@@ -100,7 +100,7 @@ class Simulator:
                         )
                         send_signal(
                             self.node_info[node[0]]["sock_obj"],
-                            {"node_num": node[0], "msg": "IN"}
+                            {"node_num": self.node_info["agent_b"], "msg": "IN"}
                         )
 
                         self.set_nodes(node[0], {"agent": "B", "recent_agent": "B"})
@@ -119,7 +119,7 @@ class Simulator:
                         )
                         send_signal(
                             self.node_info[node[0]]["sock_obj"],
-                            {"node_num": node[0], "msg": "IN"}
+                            {"node_num": self.node_info["agent_a"], "msg": "IN"}
                         )
 
                         self.set_nodes(node[0], {"agent": "A", "recent_agent": "A"})
