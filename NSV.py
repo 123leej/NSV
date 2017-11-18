@@ -22,7 +22,7 @@ if __name__ == "__main__":
         algorithm_file_path = params["file_path"]
         number_of_node = params["number_of_nodes"]
         zone_range = params["zone_range"]
-'''
+
         try:
             simulator = Simulator()
             simulator.make_node_threads(number_of_node)
@@ -36,4 +36,3 @@ if __name__ == "__main__":
 
     if selected_menu(len(params)) is "Performance_Analysis":
         result_data_path = params["file_path"]
-'''
