@@ -100,10 +100,11 @@ class SetAlgorithmUi(object):
         dialog.setWindowTitle(_translate("KU_NSV", "KU NSV"))
         self.label_1.setText(_translate("Dialog", "Select Algorithm"))
         self.label_2.setText(_translate("Dialog", "Set number of Nodes"))
-        self.label_3.setText(_translate("Dialog", "Zone range (50 ~ 300)"))
+        self.label_3.setText(_translate("Dialog", "Zone range: 100"))
 
     def slider_event(self):
         self.zone_range = self.zone_range_bar.value()
+        self.label_3.setText("Zone range: " + str(self.zone_range))
 
     def file_browse(self):
         self.child = FileBrowser()
