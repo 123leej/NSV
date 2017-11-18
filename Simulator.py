@@ -1,7 +1,6 @@
 import os
 import sys
 import threading
-import socket
 
 from PyQt5 import QtWidgets
 
@@ -10,12 +9,16 @@ from Util.RunProcess import run_process
 from Util.KillProcess import kill_process
 from Util.LogManager import LogManager
 from Util.MakeSocket import make_socket_object
+from Util.SendSignal import send_signal
+
 
 # TODO set Zone range???????
 
 class Simulator:
     def __init__(self):
         self.zone_range = 150
+        self.agent_a = 0
+        self.agent_b = 0
         self.node_info = {}
         self.linked_socket = {}
         self.thread_list = []
@@ -41,6 +44,8 @@ class Simulator:
                 self.detect_event(data)
                 self.window.node_update(self.graphics_view, self.graphics_scene, data)
             else:
+                self.agent_a = data[0]
+                self.agent_b = data[1]
                 self.detect_event(data)
                 self.window.draw_nodes(data[0], data[1], data[2:])
 
@@ -58,12 +63,13 @@ class Simulator:
             else:
                 self.linked_socket[str(_node_number)] = make_socket_object(log)
 
-    def stop_node(self, _number_of_nodes):
-        # TODO send (all_sock, {"msg": "END"})
+    def stop_node(self):
+        for node_number in self.linked_socket:
+            send_signal(self.linked_socket[node_number], {"msg": "END"})
 
     def stop_all_simulation(self, _file, _number_of_nodes):
         self.stop_algorithm(_file)
-        self.stop_node(_number_of_nodes)
+        self.stop_node()
         self.log_manager.merge_log_files()
 
     def detect_event(self, _data):
@@ -72,17 +78,19 @@ class Simulator:
             len_from_b = node_info[4]
 
             if len_from_a > self.zone_range and len_from_b > self.zone_range:
-                # TODO send (node_info[0]_sock, {"msg": "OUT"})
+                send_signal(self.linked_socket[node_info[0]], {"msg": "OUT"})
             else:
                 if len_from_a > len_from_b:
-                    # TODO get node info if recent_agent was a & agent was not b(send a_sock, {"msg": "REQ"})
-
-                    # TODO get node info if agent was not b (send b_sock, {"node_num": node_info[0], "msg": "IN"})
-                    # TODO get node info if agent was not b (send node_info[0]_sock, {"node_num": node_info[0], "msg": "IN"})
+                    if agent is not b:
+                        if recentagent is a:
+                            send_signal(self.linked_socket[self.agent_a], {"msg": "REQ"})
+                        send_signal(self.linked_socket[self.agent_b], {"node_num": node_info[0], "msg": "IN"})
+                        send_signal(self.linked_socket[node_info[0]], {"node_num": node_info[0], "msg": "IN"})
                 if len_from_a < len_from_b:
-                    # TODO get node info if recent_agent was b & agent was not a(send b_sock, {"msg": "REQ"})
-
-                    # TODO get node info if agent was not a (send a_sock, {"node_num": node_info[0], "msg": "IN"})
-                    # TODO get node info if agent was not a (send node_info[0]_sock, {"node_num": node_info[0], "msg": "IN"})
+                    if agent is not a:
+                        if recentagent is b:
+                            send_signal(self.linked_socket[self.agent_b], {"msg": "REQ"})
+                        send_signal(self.linked_socket[self.agent_a], {"node_num": node_info[0], "msg": "IN"})
+                        send_signal(self.linked_socket[node_info[0]], {"node_num": node_info[0],"msg": "IN"})
 
     def set_nodes(self, _info):
