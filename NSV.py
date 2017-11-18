@@ -1,5 +1,6 @@
 from Gui.NSV_First_Dialog import NSVUi
 from Simulator import Simulator
+from Exception.NSVExceptions import SimulationFinishException
 
 PORT = 8000
 
@@ -12,6 +13,8 @@ def selected_menu(param_len):
 
 
 if __name__ == "__main__":
+    simulator = None
+    
     NSV = NSVUi()
     params = NSV.start()
 
@@ -26,6 +29,9 @@ if __name__ == "__main__":
             simulator.run_algorithm(algorithm_file_path, number_of_node, zone_range)
 
         except InterruptedError:
+            simulator.stop_all_simulation(algorithm_file_path)
+
+        except SimulationFinishException:
             simulator.stop_all_simulation(algorithm_file_path)
 
     if selected_menu(len(params)) is "Performance_Analysis":
