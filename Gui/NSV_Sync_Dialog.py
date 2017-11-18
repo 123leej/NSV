@@ -87,10 +87,18 @@ class SetAlgorithmUi(object):
     def set_parameter(self):
         self.algorithm_file_path = self.file_location.text()
         self.number_of_nodes = self.node_num.itemText(0)
+        self.zone_range = ###UI for zone range
+
+        # TODO set zone range
+
         if self.algorithm_file_path == "":
             sys.exit(0)
         else:
             self.closer.done(0)
 
     def get_parameter(self):
-        return {"file_path": self.algorithm_file_path, "number_of_nodes": self.number_of_nodes}
+        return {
+            "file_path": self.algorithm_file_path,
+            "number_of_nodes": self.number_of_nodes,
+            "zone_range": self.zone_range
+        }

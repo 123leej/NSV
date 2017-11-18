@@ -18,7 +18,15 @@ if __name__ == "__main__":
     if selected_menu(len(params)) is "Sync_Simulation":
         algorithm_file_path = params["file_path"]
         number_of_node = params["number_of_nodes"]
-        Simulator()
+        zone_range = params["zone_range"]
+
+        try:
+            simulator = Simulator()
+            simulator.make_node_threads(number_of_node)
+            simulator.run_algorithm(algorithm_file_path, number_of_node, zone_range)
+
+        except InterruptedError:
+            simulator.stop_all_simulation(algorithm_file_path)
 
     if selected_menu(len(params)) is "Performance_Analysis":
         result_data_path = params["file_path"]
