@@ -3,6 +3,10 @@ venv/
 
 \.idea/
 
+<<<<<<< master
 NODE/\.ropeproject/
+=======
+Exception/__pycache__/
+>>>>>>> add/ignore
 
 __pycache__/
