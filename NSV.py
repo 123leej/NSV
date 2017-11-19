@@ -33,7 +33,7 @@ if __name__ == "__main__":
 
         try:
             simulator = Simulator(dialog)
-            #simulator.make_node_threads(number_of_node)
+            simulator.make_node_threads(number_of_node)
             simulator.run_algorithm(algorithm_file_path, number_of_node, zone_range)
 
         except InterruptedError:

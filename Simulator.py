@@ -76,19 +76,19 @@ class Simulator:
             len_from_b = node[4]
 
             if len_from_a > self.zone_range and len_from_b > self.zone_range:
-                '''
+
                 send_signal(
                     self.node_info[node[0]]["sock_obj"],
                     {"msg": "OUT"}
                 )
-                '''
+
                 self.set_nodes(node[0], {"agent": None})
 
             else:
                 if len_from_a > len_from_b:
                     try:
                         if self.node_info[node[0]]["agent"] is not "B":
-                            '''
+
                             if self.node_info[node[0]]["recent_agent"] is "A":
                                 send_signal(
                                     self.node_info[self.node_info["agent_a"]]["sock_obj"],
@@ -103,12 +103,12 @@ class Simulator:
                                 self.node_info[node[0]]["sock_obj"],
                                 {"node_num": self.node_info["agent_b"], "msg": "IN"}
                             )
-                            '''
+
 
                             self.set_nodes(node[0], {"agent": "B", "recent_agent": "B"})
                     except KeyError:
                         self.set_nodes(node[0], {"agent": "B", "recent_agent": "B"})
-                        '''
+
                         send_signal(
                             self.node_info[self.node_info["agent_b"]]["sock_obj"],
                             {"node_num": node[0], "msg": "IN"}
@@ -117,11 +117,11 @@ class Simulator:
                             self.node_info[node[0]]["sock_obj"],
                             {"node_num": self.node_info["agent_b"], "msg": "IN"}
                         )
-                        '''
+
                 if len_from_a < len_from_b:
                     try:
                         if self.node_info[node[0]]["agent"] is not "A":
-                            '''
+
                             if self.node_info[node[0]]["recent_agent"] is "B":
                                 send_signal(
                                     self.node_info[self.node_info["agent_b"]]["sock_obj"],
@@ -136,11 +136,11 @@ class Simulator:
                                 self.node_info[node[0]]["sock_obj"],
                                 {"node_num": self.node_info["agent_a"], "msg": "IN"}
                             )
-                            '''
+
                             self.set_nodes(node[0], {"agent": "A", "recent_agent": "A"})
                     except KeyError:
                         self.set_nodes(node[0], {"agent": "A", "recent_agent": "A"})
-                        '''
+
                         send_signal(
                             self.node_info[self.node_info["agent_a"]]["sock_obj"],
                             {"node_num": node[0], "msg": "IN"}
@@ -149,6 +149,6 @@ class Simulator:
                             self.node_info[node[0]]["sock_obj"],
                             {"node_num": self.node_info["agent_a"], "msg": "IN"}
                         )
-                        '''
+
     def set_nodes(self, _node_num, _info):
         self.node_info[_node_num] = _info
