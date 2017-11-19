@@ -4,6 +4,7 @@ from Simulator import Simulator
 from Analyze_Result_Data import ShowResultDataUi
 from Exception.NSVExceptions import SimulationFinishException
 from PyQt5 import QtCore, QtWidgets
+import time
 
 
 PORT = 8000
@@ -34,6 +35,7 @@ if __name__ == "__main__":
         try:
             simulator = Simulator(dialog)
             simulator.make_node_threads(number_of_node)
+            time.sleep(10)
             simulator.run_algorithm(algorithm_file_path, number_of_node, zone_range)
 
         except InterruptedError:

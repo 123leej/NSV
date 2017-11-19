@@ -47,7 +47,7 @@ class Simulator:
         kill_process(process_name)
 
     def run_node(self, _node_number):
-        for idx, log in enumerate(run_process("python3 NODE/node.py "+str(_node_number))):
+        for idx, log in enumerate(run_process("python3 NODE/Node.py "+str(_node_number))):
             log.decode('utf-8')
             if idx is not 0:
                 self.log_manager.write_log(_node_number, log)
@@ -145,6 +145,10 @@ class Simulator:
                         self.set_nodes(node[0], {"agent": "A", "recent_agent": "A"})
             else:
                 pass
-            
+
     def set_nodes(self, _node_num, _info):
-        self.node_info[_node_num] = _info
+        if isinstance(_info, dict):
+            for i in _info:
+                self.node_info[_node_num][i] = _info[i]
+        else:
+            self.node_info[_node_num] = _info

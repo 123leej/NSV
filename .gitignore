@@ -16,3 +16,5 @@ Result_Data_Barchart\.py
 Result_Data_Graph\.py
 
 *.pyc
+
+\.ropeproject/
