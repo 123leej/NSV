@@ -7,6 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt
+import time
 
 #[index, x, y, agent_A_distance, agent_B_distance]
 
@@ -14,17 +15,14 @@ data_set = [[1, 100, 100, 10, 200], [2, 150, 150, 10, 200], [3, 200, 200, 10, 20
 
 
 class SimulatorUi(object):
-    def __init__(self):
-        self.node_objects = []
-
     def setup_ui(self, form):
         form.setObjectName("form")
         form.resize(771, 516)
 
         graphics_view = QtWidgets.QGraphicsView(form)
         graphics_scene = QtWidgets.QGraphicsScene(graphics_view)
+        #graphics_scene.connect(graphics_scene, SIGNAL("_graphics_scene.items()"))
         graphics_scene.setSceneRect(5, 11, 769, 441)
-
         graphics_view.setScene(graphics_scene)
 
         self.horizontal_layout_widget = QtWidgets.QWidget(form)
@@ -56,41 +54,31 @@ class SimulatorUi(object):
 
 
     def node_update(self, _graphics_view, _graphics_scene, datas):
+        print("UPDATE")
+        for idx, item in enumerate(sorted(_graphics_scene.items(), key = self.node_numb_key)):
+            item.setPos(datas[idx][1], datas[idx][2])
+            print(str(idx) + " " + str(datas[idx][1]) + " "+ str(datas[idx][2]))
 
-            for data in datas:
-                node = self.node_objects[data[0]-1]
-                node.setPos(data[1], data[2])
- #              _graphics_scene.addItem(node)
+        _graphics_view.updateSceneRect(_graphics_scene.sceneRect())
+        QtCore.QCoreApplication.processEvents()
 
-                _graphics_scene.update(node.rect())
-
-
-            #_graphics_view.setScene(_graphics_scene)
-            #_graphics_scene.changed(QtCore.QRectF())
-            #_graphics_scene.update()
-
+    def node_numb_key(self, _item):
+        return _item.zValue()
     def draw_nodes(self, _graphics_scene, agent_A, agent_B, datas):
+
         for data in datas:
-            if data[0] == agent_A+1 or data[0] == agent_B+1:
+            if data[0] == agent_A or data[0] == agent_B:
                 a = QtWidgets.QGraphicsEllipseItem(1, 1, 30, 30)
-                #print("agent")
                 a.setPen(QtGui.QPen(QtCore.Qt.black, 2))
-                a.setBrush(QtGui.QBrush(QtCore.Qt.yellow, QtCore.Qt.SolidPattern))
+                a.setBrush(QtGui.QBrush(QtCore.Qt.red, QtCore.Qt.SolidPattern))
+                a.setZValue(data[0])
                 _graphics_scene.addItem(a)
-                self.node_objects.append(a)
-                #agentA or B pos
             else:
                 b = QtWidgets.QGraphicsEllipseItem(1, 1, 15, 15)
-                #print("node")
                 b.setPen(QtGui.QPen(QtCore.Qt.black, 2))
                 b.setBrush(QtGui.QBrush(QtCore.Qt.yellow, QtCore.Qt.SolidPattern))
+                b.setZValue(data[0])
                 _graphics_scene.addItem(b)
-                self.node_objects.append(b)
-
-
-
-
-
 
 
 import sys
@@ -163,9 +151,16 @@ app = QtWidgets.QApplication(sys.argv)
 window = QtWidgets.QDialog()
 ui = SimulatorUi()
 gv, gs = ui.setup_ui(window)
-ui.draw_nodes(gs, datas[0][0],datas[0][1],datas[0][2:])
+window.show()
+
+agenta=datas[0][0]
+agentb=datas[0][1]
+
+ui.draw_nodes(gs, agenta, agentb, datas[0][2:])
+
 for data in datas[1:]:
     ui.node_update(gv, gs, data)
+    time.sleep(0.1)
 
-window.show()
+
 sys.exit(app.exec_())
