@@ -6,8 +6,8 @@
 #
 # WARNING! All changes made in this file will be lost!
 import sys
-from GUI.NSV_Sync_Dialog import SetAlgorithmUi
-from GUI.NSV_Analysis_Dialog import SetResultDataUi
+from Gui.NSV_Sync_Dialog import SetAlgorithmUi
+from Gui.NSV_Analysis_Dialog import SetResultDataUi
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
@@ -40,6 +40,7 @@ class NSVUi(object):
         self.horizontal_layout_3.setObjectName("horizontalLayout_3")
 
         self.push_button = QtWidgets.QPushButton(self.vertical_layout_widget)
+        self.push_button.setStyleSheet('QPushButton {color: black;}')
         size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         size_policy.setHorizontalStretch(0)
         size_policy.setVerticalStretch(0)
@@ -55,6 +56,7 @@ class NSVUi(object):
         self.push_button.clicked.connect(self.btn1_clicked)
 
         self.push_button_2 = QtWidgets.QPushButton(self.vertical_layout_widget)
+        self.push_button_2.setStyleSheet('QPushButton {color: black;}')
         size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         size_policy.setHorizontalStretch(0)
         size_policy.setVerticalStretch(0)
@@ -65,7 +67,6 @@ class NSVUi(object):
         font.setBold(True)
         font.setWeight(75)
         self.push_button_2.setFont(font)
-        self.push_button_2.setAutoFillBackground(False)
         self.push_button_2.setObjectName("pushButton_2")
         self.horizontal_layout_3.addWidget(self.push_button_2)
         self.push_button.clicked.connect(self.btn2_clicked)
@@ -77,7 +78,7 @@ class NSVUi(object):
 
     def translate_ui(self, dialog):
         _translate = QtCore.QCoreApplication.translate
-        dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        dialog.setWindowTitle(_translate("Dialog", "KU NSV"))
         self.label.setText(_translate("Dialog", "KU-NSV"))
         self.push_button.setText(_translate("Dialog", "Sync\nSimulation"))
         self.push_button_2.setText(_translate("Dialog", "Performance\nAnalysis"))
@@ -93,16 +94,19 @@ class NSVUi(object):
 
         if btn == 1:
             self.child = SetAlgorithmUi()
+
         if btn == 2:
             self.child = SetResultDataUi()
 
         self.child.setup_ui(self.dialog)
         self.dialog.show()
 
-    def show(self):
+    def start(self):
         app = QtWidgets.QApplication(sys.argv)
         self.dialog = QtWidgets.QDialog()
         self.setup_ui(self.dialog)
         self.dialog.show()
-        sys.exit(app.exec_())
+        app.exec_()
+
+        return self.child.get_parameter()
 

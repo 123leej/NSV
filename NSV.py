@@ -1,13 +1,38 @@
-from GUI.NSV_First_Dialog import NSVUi
+from Gui.NSV_First_Dialog import NSVUi
+from Simulator import Simulator
+from Exception.NSVExceptions import SimulationFinishException
+
+PORT = 8000
+
+
+def selected_menu(menu):
+    return {
+        1: "Sync_Simulation",
+        2: "Performance_Analysis"
+    }.get(menu, "Error")
 
 
 if __name__ == "__main__":
+    simulator = None
+
     NSV = NSVUi()
-    NSV.show()
+    params = NSV.start()
 
-    # TODO we have to get file directory from file dialog
+    if selected_menu(params['flag']) is "Sync_Simulation":
+        algorithm_file_path = params["file_path"]
+        number_of_node = params["number_of_nodes"]
+        zone_range = params["zone_range"]
 
-    algorithm_path = ''
+        try:
+            simulator = Simulator()
+            simulator.make_node_threads(number_of_node)
+            simulator.run_algorithm(algorithm_file_path, number_of_node, zone_range)
 
+        except InterruptedError:
+            simulator.stop_all_simulation(algorithm_file_path)
 
+        except SimulationFinishException:
+            simulator.stop_all_simulation(algorithm_file_path)
 
+    if selected_menu(len(params)) is "Performance_Analysis":
+        result_data_path = params["file_path"]

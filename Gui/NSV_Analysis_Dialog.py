@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'NSV_Sync_Dialog.ui'
+# Form implementation generated from reading ui file 'NSV_Analysis_Dialog.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.1
 #
 # WARNING! All changes made in this file will be lost!
-
+import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-# TODO show empty label and beside of it there is button "..." this button event popup file browser
-# TODO update label after "..." button event as set directory
-# TODO SET LABEL location
-# TODO add node parameter setting
+# TODO it must have get_parameter function link with NSV_First_Dialog there is example in NSV_Sync_Dialog
+# TODO get_parameter must return {'file_path': selected file path(string)}
 
 
-class SetAlgorithmUi(object):
+class SetResultDataUi(object):
     def setup_ui(self, dialog):
         dialog.setObjectName("Dialog")
         dialog.resize(400, 300)
@@ -43,8 +41,15 @@ class SetAlgorithmUi(object):
 
     def translate_ui(self, dialog):
         _translate = QtCore.QCoreApplication.translate
-        dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.label.setText(_translate("Dialog", "Select Algorithm"))
+        dialog.setWindowTitle(_translate("Dialog", "KU NSV"))
+        self.label.setText(_translate("Dialog", "Select File"))
 
 
+def get_alalysis_result_dialog():
+    app = QtWidgets.QApplication(sys.argv)
+    dialog = QtWidgets.QDialog()
+    ui = SetResultDataUi()
+    ui.setup_ui(dialog)
+    dialog.show()
+    sys.exit(app.exec_())
 
