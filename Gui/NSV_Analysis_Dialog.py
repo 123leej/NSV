@@ -45,7 +45,7 @@ class SetResultDataUi(object):
         self.label.setText(_translate("Dialog", "Select File"))
 
 
-def get_alalysis_result_dialog():
+def get_analysis_result_dialog():
     app = QtWidgets.QApplication(sys.argv)
     dialog = QtWidgets.QDialog()
     ui = SetResultDataUi()

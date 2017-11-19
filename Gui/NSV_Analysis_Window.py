@@ -36,4 +36,3 @@ def get_analysis_result_window():
     ui.setup_ui(form)
     form.show()
     sys.exit(app.exec_())
-
