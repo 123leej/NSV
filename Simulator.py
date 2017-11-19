@@ -34,7 +34,6 @@ class Simulator:
 
     def run_algorithm(self, _file, _node, _zone_range):
         self.zone_range = _zone_range
-        # test "python3 " +
         for idx, data in enumerate(run_process(_file + " " + _node + " " + _zone_range)):
             data = data.decode('utf-8')
             if idx is not 0:

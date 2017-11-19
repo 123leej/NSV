@@ -5,7 +5,7 @@
 # Created by: PyQt5 UI code generator 5.9.1
 #
 # WARNING! All changes made in this file will be lost!
-
+from Exception.NSVExceptions import SimulationFinishException
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
@@ -33,6 +33,7 @@ class SimulatorUi(object):
         size_policy.setHeightForWidth(self.push_button.sizePolicy().hasHeightForWidth())
         self.push_button.setSizePolicy(size_policy)
         self.push_button.setObjectName("pushButton")
+        self.push_button.clicked.connect(self.finish_simulation)
         self.horizontal_layout.addWidget(self.push_button)
 
         self.translate_ui(form)
@@ -41,4 +42,7 @@ class SimulatorUi(object):
     def translate_ui(self, form):
         _translate = QtCore.QCoreApplication.translate
         form.setWindowTitle(_translate("Form", "KU NSV"))
-        self.push_button.setText(_translate("Form", "Summary"))
+        self.push_button.setText(_translate("Form", "Finish Simulation & Save result Data"))
+
+    def finish_simulation(self):
+        raise SimulationFinishException
