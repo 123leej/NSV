@@ -14,10 +14,10 @@ class SimulatorUi(object):
         form.setObjectName("form")
         form.resize(771, 516)
 
-        graphics_view = QtWidgets.QGraphicsView(form)
-        graphics_scene = QtWidgets.QGraphicsScene(graphics_view)
-        graphics_scene.setSceneRect(5, 11, 769, 441)
-        graphics_view.setScene(graphics_scene)
+        self.graphics_view = QtWidgets.QGraphicsView(form)
+        self.graphics_scene = QtWidgets.QGraphicsScene(self.graphics_view)
+        self.graphics_scene.setSceneRect(5, 11, 769, 441)
+        self.graphics_view.setScene(self.graphics_scene)
 
         self.horizontal_layout_widget = QtWidgets.QWidget(form)
         self.horizontal_layout_widget.setGeometry(QtCore.QRect(10, 460, 751, 51))
@@ -39,24 +39,22 @@ class SimulatorUi(object):
         self.translate_ui(form)
         QtCore.QMetaObject.connectSlotsByName(form)
 
-        return graphics_view, graphics_scene
-
     def translate_ui(self, form):
         _translate = QtCore.QCoreApplication.translate
         form.setWindowTitle(_translate("Form", "KU NSV"))
         self.push_button.setText(_translate("Form", "Finish Simulation & Save result Data"))
 
-    def node_update(self, _graphics_view, _graphics_scene, datas):
-        for idx, item in enumerate(sorted(_graphics_scene.items(), key = self.node_numb_key)):
+    def node_update(self, datas):
+        for idx, item in enumerate(sorted(self.graphics_scene.items(), key=self.node_numb_key)):
             item.setPos(datas[idx][1], datas[idx][2])
 
-        _graphics_view.updateSceneRect(_graphics_scene.sceneRect())
+        self.graphics_view.updateSceneRect(self.graphics_scene.sceneRect())
         QtCore.QCoreApplication.processEvents()
 
     def node_numb_key(self, _item):
         return _item.zValue()
 
-    def draw_nodes(self, _graphics_scene, agent_A, agent_B, datas):
+    def draw_nodes(self, agent_A, agent_B, datas):
 
         for data in datas:
             if data[0] == agent_A or data[0] == agent_B:
@@ -64,13 +62,39 @@ class SimulatorUi(object):
                 a.setPen(QtGui.QPen(QtCore.Qt.black, 2))
                 a.setBrush(QtGui.QBrush(QtCore.Qt.red, QtCore.Qt.SolidPattern))
                 a.setZValue(data[0])
-                _graphics_scene.addItem(a)
+                print(a)
+                self.graphics_scene.addItem(a)
             else:
                 b = QtWidgets.QGraphicsEllipseItem(1, 1, 15, 15)
                 b.setPen(QtGui.QPen(QtCore.Qt.black, 2))
                 b.setBrush(QtGui.QBrush(QtCore.Qt.yellow, QtCore.Qt.SolidPattern))
                 b.setZValue(data[0])
-                _graphics_scene.addItem(b)
+                print(b)
+                self.graphics_scene.addItem(b)
 
     def finish_simulation(self):
         raise SimulationFinishException
+'''
+import sys
+import time
+from Util.RunProcess import run_process
+from Util.Parser import string_parser
+app = QtWidgets.QApplication(sys.argv)
+dialog = QtWidgets.QDialog()
+dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+window = SimulatorUi()
+window.setup_ui(dialog)
+dialog.show()
+
+for idx, data in enumerate(run_process("../../Firefly/dist/firefly/firefly 9 150")):
+    data = data.decode('utf-8')
+    if idx is not 0:
+        data = string_parser(data)
+        window.node_update(data)
+        time.sleep(0.1)
+    else:
+        a, b, data = string_parser(data, option="init")
+        window.draw_nodes(a, b, data)
+
+app.exec_()
+'''
