@@ -13,14 +13,12 @@ from Util.Parser import string_parser
 
 
 class Simulator:
-    def __init__(self):
+    def __init__(self, _dialog):
         self.zone_range = 0
         self.node_info = {}
         self.thread_list = []
         self.log_manager = LogManager()
-
-        self.window = SimulatorUi()
-
+        self.window = SimulatorUi(_dialog)
 
     def make_node_threads(self, _number_of_nodes):
         for node_number in range(0, int(_number_of_nodes)):

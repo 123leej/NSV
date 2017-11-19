@@ -11,10 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class SimulatorUi(object):
-    def __init__(self):
-        app = QtWidgets.QApplication(sys.argv)
-        dialog = QtWidgets.QDialog()
-        dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+    def __init__(self, dialog):
         self.setup_ui(dialog)
         dialog.show()
 
@@ -80,27 +77,3 @@ class SimulatorUi(object):
 
     def finish_simulation(self):
         raise SimulationFinishException
-'''
-import sys
-import time
-from Util.RunProcess import run_process
-from Util.Parser import string_parser
-app = QtWidgets.QApplication(sys.argv)
-dialog = QtWidgets.QDialog()
-dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-window = SimulatorUi()
-window.setup_ui(dialog)
-dialog.show()
-
-for idx, data in enumerate(run_process("../../Firefly/dist/firefly/firefly 9 150")):
-    data = data.decode('utf-8')
-    if idx is not 0:
-        data = string_parser(data)
-        window.node_update(data)
-        time.sleep(0.1)
-    else:
-        a, b, data = string_parser(data, option="init")
-        window.draw_nodes(a, b, data)
-
-app.exec_()
-'''

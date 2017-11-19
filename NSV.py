@@ -1,6 +1,9 @@
+import sys
 from Gui.NSV_First_Dialog import NSVUi
 from Simulator import Simulator
 from Exception.NSVExceptions import SimulationFinishException
+from PyQt5 import QtCore, QtWidgets
+
 
 PORT = 8000
 
@@ -25,7 +28,10 @@ if __name__ == "__main__":
 
 
         try:
-            simulator = Simulator()
+            app = QtWidgets.QApplication(sys.argv)
+            dialog = QtWidgets.QDialog()
+            dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+            simulator = Simulator(dialog)
             #simulator.make_node_threads(number_of_node)
             simulator.run_algorithm(algorithm_file_path, number_of_node, zone_range)
 
