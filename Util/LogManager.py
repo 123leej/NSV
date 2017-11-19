@@ -10,7 +10,7 @@ class LogManager:
 
     def open_log_file(self, _node_number):
         self.log_file.append("node" + str(_node_number) + "_log.txt")
-        self.log_file_buffer.append(open("./log/" + self.log_file[_node_number], "a"))
+        self.log_file_buffer.append(open("./log/" + self.log_file[_node_number-1], "a"))
 
     def write_log(self, _node_number, _log):
         try:
