@@ -14,9 +14,9 @@ class LogManager:
 
     def write_log(self, _node_number, _log):
         try:
-            self.log_file_buffer[_node_number].write(_log + "\n")
+            self.log_file_buffer[_node_number-1].write(_log + "\n")
         except Exception:
-            raise LogFileWriteError('LogFileWriteError: "' + self.log_file[_node_number] + 'file can\'t open')
+            raise LogFileWriteError('LogFileWriteError: "' + self.log_file[_node_number-1] + 'file can\'t open')
 
     def save_logs(self):
         for i in range(0, len(self.log_file_buffer)):

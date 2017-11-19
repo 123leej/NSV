@@ -39,6 +39,7 @@ class SimulatorUi(object):
         size_policy.setHeightForWidth(self.push_button.sizePolicy().hasHeightForWidth())
         self.push_button.setSizePolicy(size_policy)
         self.push_button.setObjectName("pushButton")
+        self.push_button.clicked.connect(self.finish_simulation)
         self.horizontal_layout.addWidget(self.push_button)
 
         self.translate_ui(form)

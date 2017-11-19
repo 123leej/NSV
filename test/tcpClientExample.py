@@ -1,10 +1,9 @@
 ﻿import socket
 
-host = socket.gethostname()
-port = 8000
+host = '127.0.0.1'
+port = 20000
 s = socket.socket()
 s.connect((host, port))
-print('Connected to', host)
 init_data=":)"
 s.send(str(init_data).encode('utf-8'))
 
