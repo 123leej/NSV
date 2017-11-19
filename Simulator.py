@@ -1,9 +1,7 @@
 import os
 import sys
 import threading
-import datetime
 import time
-from PyQt5 import QtWidgets, QtCore
 
 from Gui.NSV_Sync_Window import SimulatorUi
 from Util.RunProcess import run_process
@@ -21,12 +19,7 @@ class Simulator:
         self.thread_list = []
         self.log_manager = LogManager()
 
-        self.app = QtWidgets.QApplication(sys.argv)
-        dialog = QtWidgets.QDialog()
-        dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.window = SimulatorUi()
-        self.window.setup_ui(dialog)
-        dialog.show()
 
 
     def make_node_threads(self, _number_of_nodes):

@@ -5,11 +5,19 @@
 # Created by: PyQt5 UI code generator 5.9.1
 #
 # WARNING! All changes made in this file will be lost!
+import sys
 from Exception.NSVExceptions import SimulationFinishException
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class SimulatorUi(object):
+    def __init__(self):
+        app = QtWidgets.QApplication(sys.argv)
+        dialog = QtWidgets.QDialog()
+        dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+        self.setup_ui(dialog)
+        dialog.show()
+
     def setup_ui(self, form):
         form.setObjectName("form")
         form.resize(771, 516)
@@ -62,14 +70,12 @@ class SimulatorUi(object):
                 a.setPen(QtGui.QPen(QtCore.Qt.black, 2))
                 a.setBrush(QtGui.QBrush(QtCore.Qt.red, QtCore.Qt.SolidPattern))
                 a.setZValue(data[0])
-                print(a)
                 self.graphics_scene.addItem(a)
             else:
                 b = QtWidgets.QGraphicsEllipseItem(1, 1, 15, 15)
                 b.setPen(QtGui.QPen(QtCore.Qt.black, 2))
                 b.setBrush(QtGui.QBrush(QtCore.Qt.yellow, QtCore.Qt.SolidPattern))
                 b.setZValue(data[0])
-                print(b)
                 self.graphics_scene.addItem(b)
 
     def finish_simulation(self):
