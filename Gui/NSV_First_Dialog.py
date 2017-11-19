@@ -69,7 +69,7 @@ class NSVUi(object):
         self.push_button_2.setFont(font)
         self.push_button_2.setObjectName("pushButton_2")
         self.horizontal_layout_3.addWidget(self.push_button_2)
-        self.push_button.clicked.connect(self.btn2_clicked)
+        self.push_button_2.clicked.connect(self.btn2_clicked)
 
         self.vertical_layout.addLayout(self.horizontal_layout_3)
 

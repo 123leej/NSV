@@ -1,6 +1,7 @@
 import sys
 from Gui.NSV_First_Dialog import NSVUi
 from Simulator import Simulator
+from Analyze_Result_Data import ShowResultDataUi
 from Exception.NSVExceptions import SimulationFinishException
 from PyQt5 import QtCore, QtWidgets
 
@@ -21,16 +22,16 @@ if __name__ == "__main__":
     NSV = NSVUi()
     params = NSV.start()
 
+    app = QtWidgets.QApplication(sys.argv)
+    dialog = QtWidgets.QDialog()
+    dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+
     if selected_menu(params['flag']) is "Sync_Simulation":
         algorithm_file_path = params["file_path"]
         number_of_node = params["number_of_nodes"]
         zone_range = params["zone_range"]
 
-
         try:
-            app = QtWidgets.QApplication(sys.argv)
-            dialog = QtWidgets.QDialog()
-            dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose)
             simulator = Simulator(dialog)
             #simulator.make_node_threads(number_of_node)
             simulator.run_algorithm(algorithm_file_path, number_of_node, zone_range)
@@ -41,5 +42,7 @@ if __name__ == "__main__":
         except SimulationFinishException:
             simulator.stop_all_simulation(algorithm_file_path)
 
-    if selected_menu(len(params)) is "Performance_Analysis":
+    if selected_menu(params['flag']) is "Performance_Analysis":
         result_data_path = params["file_path"]
+        analyze_result = ShowResultDataUi(dialog)
+

@@ -10,7 +10,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class AnalysisResultUi(object):
-    def __init__(self, _result_1, _result_2, _log):
+    def __init__(self, dialog, _result_1, _result_2, _log):
+        self.setup_ui(dialog)
+        dialog.show()
+
         self.result_1 = _result_1
         self.result_2 = _result_2
         self.log = _log
@@ -88,12 +91,3 @@ class AnalysisResultUi(object):
         else:
             self.label.setPixmap(buffer)
             self.label_2.setText(self.log)
-
-import sys
-
-app = QtWidgets.QApplication(sys.argv)
-dialog = QtWidgets.QDialog()
-window = AnalysisResultUi("../1.jpeg", "../2.jpeg", "test")
-window.setup_ui(dialog)
-dialog.show()
-sys.exit(app.exec_())

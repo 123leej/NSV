@@ -4,6 +4,8 @@ import os
 import sys
 import math
 
+from Gui.NSV_Analysis_Window import AnalysisResultUi
+
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, '..'))
 
@@ -13,6 +15,9 @@ from pygooglechart import StackedHorizontalBarChart, StackedVerticalBarChart, \
 import settings
 
 class ShowResultDataUi(object):
+    def __init__(self, dialog):
+        self.window = AnalysisResultUi(dialog)
+
     def show_result_data(self):
         # get_data
         f = open('Log.txt', 'r')
