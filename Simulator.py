@@ -2,6 +2,7 @@ import os
 import sys
 import threading
 
+import time
 from PyQt5 import QtWidgets
 
 from Gui.NSV_Sync_Window import SimulatorUi
@@ -39,11 +40,12 @@ class Simulator:
             if idx is not 0:
                 self.detect_event(data)
                 self.window.node_update(self.graphics_view, self.graphics_scene, data)
+                time.sleep(0.1)
             else:
                 self.set_nodes("agent_a", data[0])
                 self.set_nodes("agent_b", data[1])
                 self.detect_event(data)
-                self.window.draw_nodes(data[0], data[1], data[2:])
+                self.window.draw_nodes(self.graphics_scene, data[0], data[1], data[2:])
 
     def stop_algorithm(self, _file):
         non_extension = os.path.splitext(_file)[0]
