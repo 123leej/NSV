@@ -13,18 +13,15 @@ from Util.Parser import string_parser
 
 
 class Simulator:
-    def __init__(self, _dialog):
+    def __init__(self):
         self.zone_range = 0
         self.node_info = {}
-        self.thread_list = []
         self.log_manager = LogManager()
-        self.window = SimulatorUi(_dialog)
 
     def make_node_threads(self, _number_of_nodes):
         for node_number in range(0, int(_number_of_nodes)):
             self.log_manager.open_log_file(node_number+1)
-            self.thread_list.append(threading.Thread(target=self.run_node, args=(str(node_number+1),)))
-            self.thread_list[node_number].start()
+            threading.Thread(target=self.run_node, args=(str(node_number+1),)).start()
 
     def run_algorithm(self, _file, _node, _zone_range):
         self.zone_range = _zone_range
@@ -48,16 +45,19 @@ class Simulator:
 
     def run_node(self, _node_number):
         for idx, log in enumerate(run_process("python3 NODE/Node.py "+str(_node_number))):
-            log.decode('utf-8')
+            log = log.decode('utf-8')
+            print(log)
             if idx is not 0:
-                self.log_manager.write_log(_node_number, log)
+                self.log_manager.write_log(int(_node_number), log)
+                pass
             else:
-                print(int(log))
-                self.set_nodes(_node_number, {"port": int(log), "sock_obj": make_socket_object(int(log))})
+                sock_object = make_socket_object(int(log))
+                self.set_nodes(int(_node_number)-1, {"port": int(log), "sock_obj": sock_object}, option="init")
 
     def stop_node(self):
         for node_number in self.node_info:
             if node_number != "agent_a" or node_number != "agent_b":
+
                 send_signal(
                     self.node_info[node_number]["sock_obj"],
                     {"msg": "END"}
@@ -82,7 +82,7 @@ class Simulator:
                         {"msg": "OUT"}
                     )
 
-                    self.set_nodes(node[0], {"agent": None})
+                    self.set_nodes(node[0], {"agent": None, "recent_agent": None})
 
                 else:
                     if len_from_a > len_from_b:
@@ -126,8 +126,8 @@ class Simulator:
                 pass
 
     def set_nodes_info(self, _init_data, _agent_a, _agent_b):
-        self.set_nodes("agent_a", _agent_a)
-        self.set_nodes("agent_b", _agent_b)
+        self.set_nodes("agent_a", _agent_a, option="init")
+        self.set_nodes("agent_b", _agent_b, option="init")
 
         for node in _init_data:
             if node[0] is not self.node_info["agent_a"] or node[0] is not self.node_info["agent_b"]:
@@ -146,9 +146,15 @@ class Simulator:
             else:
                 pass
 
-    def set_nodes(self, _node_num, _info):
-        if isinstance(_info, dict):
-            for i in _info:
-                self.node_info[_node_num][i] = _info[i]
-        else:
+    def set_nodes(self, _node_num, _info, option=None):
+        try:
+            if option is None:
+                for i in _info:
+                    self.node_info[_node_num][i] = _info[i]
+            else:
+                self.node_info[_node_num] = _info
+        except KeyError:
             self.node_info[_node_num] = _info
+
+    def show(self, _dialog):
+        self.window = SimulatorUi(_dialog)

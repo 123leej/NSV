@@ -12,15 +12,11 @@ class Node:
         self.nodeNum = int(nodeNum)
         # print("Node #", self.nodeNum, sep="")
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.host = socket.gethostname()
+        self.host = '127.0.0.1'
         self.port = 20000 + self.nodeNum
         print(self.port)
-        while True:
-            try:
-                self.s.connect((self.host, self.port))
-                break
-            except:
-                pass
+        time.sleep(1)
+        self.s.connect((self.host, self.port))
         self.print_log("SET", self.nodeNum, "", "Node Created.")
         self.isAgent = self.get_type()
         self.recentAgent = None

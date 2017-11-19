@@ -32,10 +32,11 @@ if __name__ == "__main__":
         number_of_node = params["number_of_nodes"]
         zone_range = params["zone_range"]
 
+        simulator = Simulator()
         try:
-            simulator = Simulator(dialog)
             simulator.make_node_threads(number_of_node)
-            time.sleep(10)
+            time.sleep(2)
+            simulator.show(dialog)
             simulator.run_algorithm(algorithm_file_path, number_of_node, zone_range)
 
         except InterruptedError:

@@ -18,3 +18,5 @@ Result_Data_Graph\.py
 *.pyc
 
 \.ropeproject/
+
+log/
