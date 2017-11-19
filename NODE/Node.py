@@ -128,7 +128,7 @@ class Node:
         self.agentInfo = None
 
     def print_log(self, cmd, dataFrom, dataTo, details):
-		now = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+        now = datetime.now().strftime("%H:%M:%S.%f")[:-3]
         print(now, cmd, dataFrom, dataTo, details, sep="|")
 
 
