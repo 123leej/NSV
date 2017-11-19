@@ -37,8 +37,7 @@ class Simulator:
                 time.sleep(0.1)
             else:
                 agent_a, agent_b, data = string_parser(data, option="init")
-                self.set_nodes("agent_a", agent_a)
-                self.set_nodes("agent_b", agent_b)
+                self.set_nodes_info(data, agent_a, agent_b)
                 self.detect_event(data)
                 self.window.draw_nodes(self.node_info["agent_a"], self.node_info["agent_b"], data)
 
@@ -72,23 +71,22 @@ class Simulator:
 
     def detect_event(self, _update_data):
         for node in _update_data:
-            len_from_a = node[3]
-            len_from_b = node[4]
+            if node[0] is not self.node_info["agent_a"] or node[0] is not self.node_info["agent_b"]:
+                len_from_a = node[3]
+                len_from_b = node[4]
 
-            if len_from_a > self.zone_range and len_from_b > self.zone_range:
+                if len_from_a > self.zone_range and len_from_b > self.zone_range:
 
-                send_signal(
-                    self.node_info[node[0]]["sock_obj"],
-                    {"msg": "OUT"}
-                )
+                    send_signal(
+                        self.node_info[node[0]]["sock_obj"],
+                        {"msg": "OUT"}
+                    )
 
-                self.set_nodes(node[0], {"agent": None})
+                    self.set_nodes(node[0], {"agent": None})
 
-            else:
-                if len_from_a > len_from_b:
-                    try:
+                else:
+                    if len_from_a > len_from_b:
                         if self.node_info[node[0]]["agent"] is not "B":
-
                             if self.node_info[node[0]]["recent_agent"] is "A":
                                 send_signal(
                                     self.node_info[self.node_info["agent_a"]]["sock_obj"],
@@ -104,24 +102,10 @@ class Simulator:
                                 {"node_num": self.node_info["agent_b"], "msg": "IN"}
                             )
 
-
                             self.set_nodes(node[0], {"agent": "B", "recent_agent": "B"})
-                    except KeyError:
-                        self.set_nodes(node[0], {"agent": "B", "recent_agent": "B"})
 
-                        send_signal(
-                            self.node_info[self.node_info["agent_b"]]["sock_obj"],
-                            {"node_num": node[0], "msg": "IN"}
-                        )
-                        send_signal(
-                            self.node_info[node[0]]["sock_obj"],
-                            {"node_num": self.node_info["agent_b"], "msg": "IN"}
-                        )
-
-                if len_from_a < len_from_b:
-                    try:
+                    if len_from_a <= len_from_b:
                         if self.node_info[node[0]]["agent"] is not "A":
-
                             if self.node_info[node[0]]["recent_agent"] is "B":
                                 send_signal(
                                     self.node_info[self.node_info["agent_b"]]["sock_obj"],
@@ -138,17 +122,29 @@ class Simulator:
                             )
 
                             self.set_nodes(node[0], {"agent": "A", "recent_agent": "A"})
-                    except KeyError:
+            else:
+                pass
+
+    def set_nodes_info(self, _init_data, _agent_a, _agent_b):
+        self.set_nodes("agent_a", _agent_a)
+        self.set_nodes("agent_b", _agent_b)
+
+        for node in _init_data:
+            if node[0] is not self.node_info["agent_a"] or node[0] is not self.node_info["agent_b"]:
+                len_from_a = node[3]
+                len_from_b = node[4]
+
+                if len_from_a > self.zone_range and len_from_b > self.zone_range:
+                    self.set_nodes(node[0], {"agent": None})
+
+                else:
+                    if len_from_a > len_from_b:
+                        self.set_nodes(node[0], {"agent": "B", "recent_agent": "B"})
+
+                    if len_from_a <= len_from_b:
                         self.set_nodes(node[0], {"agent": "A", "recent_agent": "A"})
-
-                        send_signal(
-                            self.node_info[self.node_info["agent_a"]]["sock_obj"],
-                            {"node_num": node[0], "msg": "IN"}
-                        )
-                        send_signal(
-                            self.node_info[node[0]]["sock_obj"],
-                            {"node_num": self.node_info["agent_a"], "msg": "IN"}
-                        )
-
+            else:
+                pass
+            
     def set_nodes(self, _node_num, _info):
         self.node_info[_node_num] = _info
