@@ -57,5 +57,5 @@ class LogManager:
 
     def time_to_stamp(self, _log):
         temp = _log.split("|")[0]
-        stamp = time.mktime(datetime.datetime.strptime(temp, "%H:%M:%S").timetuple())
+        stamp = time.mktime(datetime.datetime.strptime(temp, "%H:%M:%S.%f").timetuple())
         return stamp
