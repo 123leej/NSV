@@ -15,6 +15,7 @@ class FileBrowser(QtWidgets.QWidget):
     def init_ui(self):
         point = QtCore.QRect(self.left, self.top, self.width, self.height)
         self.setGeometry(QtCore.QRect(point.center(), point.size()))
+        self.setFixedSize(self.width, self.height)
         self.open_file_name_dialog()
 
     def open_file_name_dialog(self):

@@ -20,7 +20,7 @@ class AnalysisResultUi(object):
 
     def setup_ui(self, form):
         form.setObjectName("Form")
-        form.resize(574, 378)
+        form.setFixedSize(574, 378)
 
         self.tabWidget = QtWidgets.QTabWidget(form)
         self.tabWidget.blockSignals(True)
@@ -33,32 +33,36 @@ class AnalysisResultUi(object):
         self.tab.setObjectName("tab")
 
         self.label = QtWidgets.QLabel(self.tab)
-        self.label.setGeometry(QtCore.QRect(5, 4, 561, 281))
+        self.label.setGeometry(QtCore.QRect(5, 4, 561, 231))
         self.label.setFrameShape(QtWidgets.QFrame.Box)
         self.label.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.label.setObjectName("label")
 
-        self.label_2 = QtWidgets.QLabel(self.tab)
-        self.label_2.setGeometry(QtCore.QRect(5, 294, 561, 51))
-        self.label_2.setFrameShape(QtWidgets.QFrame.Box)
-        self.label_2.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.label_2.setObjectName("label_2")
+        self.text_box = QtWidgets.QTextEdit(self.tab)
+        self.text_box.setGeometry(QtCore.QRect(5, 244, 561, 101))
+        self.text_box.setFrameShape(QtWidgets.QFrame.Box)
+        self.text_box.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.text_box.ensureCursorVisible()
+        self.text_box.setReadOnly(True)
+        self.text_box.setObjectName("textBox")
         self.tabWidget.addTab(self.tab, "")
 
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
 
         self.label_3 = QtWidgets.QLabel(self.tab_2)
-        self.label_3.setGeometry(QtCore.QRect(5, 4, 561, 281))
+        self.label_3.setGeometry(QtCore.QRect(5, 4, 561, 231))
         self.label_3.setFrameShape(QtWidgets.QFrame.Box)
         self.label_3.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.label_3.setObjectName("label_3")
 
-        self.label_4 = QtWidgets.QLabel(self.tab_2)
-        self.label_4.setGeometry(QtCore.QRect(5, 294, 561, 51))
-        self.label_4.setFrameShape(QtWidgets.QFrame.Box)
-        self.label_4.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.label_4.setObjectName("label_4")
+        self.text_box_2 = QtWidgets.QTextEdit(self.tab_2)
+        self.text_box_2.setGeometry(QtCore.QRect(5, 244, 561, 101))
+        self.text_box_2.setFrameShape(QtWidgets.QFrame.Box)
+        self.text_box_2.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.text_box_2.ensureCursorVisible()
+        self.text_box_2.setReadOnly(True)
+        self.text_box_2.setObjectName("textBox_2")
         self.tabWidget.addTab(self.tab_2, "")
 
         self.translate_ui(form)
@@ -71,11 +75,11 @@ class AnalysisResultUi(object):
         form.setWindowTitle(_translate("Form", "KU NSV"))
 
         self.label.setText(_translate("Form", "TextLabel1"))
-        self.label_2.setText(_translate("Form", "TextLabel2"))
+        self.text_box.setText(_translate("Form", "TextLabel2"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Form", "Tab 1"))
 
         self.label_3.setText(_translate("Form", "TextLabel3"))
-        self.label_4.setText(_translate("Form", "TextLabel4"))
+        self.text_box_2.setText(_translate("Form", "TextLabel4"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Form", "Tab 2"))
 
     def tab_event(self):
@@ -87,7 +91,7 @@ class AnalysisResultUi(object):
 
         if self.tabWidget.currentIndex() is 1:
             self.label_3.setPixmap(buffer)
-            self.label_4.setText(self.log)
+            self.text_box_2.setText(self.log[1])
         else:
             self.label.setPixmap(buffer)
-            self.label_2.setText(self.log)
+            self.text_box.setText(self.log[0])
