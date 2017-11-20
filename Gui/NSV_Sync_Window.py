@@ -99,6 +99,7 @@ class SimulatorUi(object):
                 b.setZValue(data[0])
                 self.graphics_scene.addItem(b)
 
+        # TODO it must fallow agent location not fixed
         len_data = len(datas)
         for i in range(len_data, len_data+2):
             if i is len_data:
