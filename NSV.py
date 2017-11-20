@@ -35,11 +35,15 @@ if __name__ == "__main__":
         simulator = Simulator()
         try:
             simulator.make_node_threads(number_of_node)
-            time.sleep(2)
+            while True:
+                if False not in simulator.get_thread_is_running():
+                    break
+                time.sleep(0.1)
+                print(1)
             simulator.show(dialog)
             simulator.run_algorithm(algorithm_file_path, number_of_node, zone_range)
 
-        except InterruptedError:
+        except KeyboardInterrupt:
             simulator.stop_all_simulation(algorithm_file_path, app)
 
         except SimulationFinishException:

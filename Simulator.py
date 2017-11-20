@@ -17,12 +17,20 @@ class Simulator:
         self.zone_range = 0
         self.node_info = {}
         self.log_manager = LogManager()
+        self.is_thread_run = []
+        self.lock = threading.Lock()
 
     def make_node_threads(self, _number_of_nodes):
+        for i in range(0, int(_number_of_nodes)):
+            self.is_thread_run.append(False)
+
         for node_number in range(0, int(_number_of_nodes)):
             self.log_manager.open_log_file(node_number+1)
             t = threading.Thread(target=self.run_node, args=(str(node_number+1),))
             t.start()
+
+    def get_thread_is_running(self):
+        return self.is_thread_run
 
     def run_algorithm(self, _file, _node, _zone_range):
         self.zone_range = _zone_range
@@ -47,14 +55,16 @@ class Simulator:
     def run_node(self, _node_number):
         for idx, log in enumerate(run_process("python3 NODE/Node.py "+str(_node_number))):
             log = log.decode('utf-8')
-            print(log)
             if idx is not 0:
                 self.log_manager.write_log(int(_node_number), log)
                 if hasattr(self, 'window'):
                     self.window.get_logs(log)
             else:
+                self.lock.acquire()
                 sock_object = make_socket_object(int(log))
                 self.set_nodes(int(_node_number)-1, {"port": int(log), "sock_obj": sock_object}, option="init")
+                self.is_thread_run[int(_node_number) - 1] = True
+                self.lock.release()
 
     def stop_node(self):
         for node_number in self.node_info:
