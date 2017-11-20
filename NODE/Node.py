@@ -13,10 +13,14 @@ class Node:
         # print("Node #", self.nodeNum, sep="")
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = '127.0.0.1'
-        self.port = 20000 + self.nodeNum
+        self.port = 21000 + self.nodeNum
         print(self.port)
-        time.sleep(1)
-        self.s.connect((self.host, self.port))
+        while True:
+            try:
+                self.s.connect((self.host, self.port))
+                break
+            except:
+                pass
         self.print_log("SET", self.nodeNum, "", "Node Created.")
         self.isAgent = self.get_type()
         self.recentAgent = None
@@ -55,7 +59,12 @@ class Node:
     def agent_in(self, nodeNum):
         # nodeNum is new Node's ID.
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((self.host, 40000+nodeNum))
+        while True:
+            try:
+                sock.connect((self.host, 40000+nodeNum))
+                break
+            except:
+                pass
         self.print_log("IN", nodeNum, self.nodeNum, "")
         rcvData = sock.recv(1024)
         data = pickle.loads(rcvData)
@@ -107,7 +116,12 @@ class Node:
     def node_in(self, nodeNum):
         # nodeNum is new Agent's ID.
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((self.host, 40000+nodeNum))
+        while True:
+            try:
+                sock.connect((self.host, 40000+nodeNum))
+                break
+            except:
+                pass
         self.print_log("IN", self.nodeNum, nodeNum, "")
         if self.recentAgent is not None:
             sock.send(pickle.dumps(self.recentAgent))
