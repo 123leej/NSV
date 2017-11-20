@@ -112,7 +112,7 @@ class SetAlgorithmUi(object):
 
     def set_parameter(self):
         self.algorithm_file_path = self.file_location.text()
-        self.number_of_nodes = self.node_num.itemText(0)
+        self.number_of_nodes = self.node_num.itemText(self.node_num.currentIndex())
 
         if self.algorithm_file_path == "":
             sys.exit(0)

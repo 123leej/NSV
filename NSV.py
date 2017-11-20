@@ -34,6 +34,7 @@ if __name__ == "__main__":
 
         simulator = Simulator()
         try:
+            print(number_of_node)
             simulator.make_node_threads(number_of_node)
             time.sleep(2)
             simulator.show(dialog)
