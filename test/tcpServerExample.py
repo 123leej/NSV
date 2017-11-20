@@ -1,44 +1,16 @@
 ﻿import socket
+import time
+HOST = '127.0.0.1'
 
-s = socket.socket()
-host = socket.gethostname()
-port = 8000
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-s.bind((host, port))
+time.sleep(30)
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.bind((HOST, 10000))
+sock.listen()
+print('[Waiting for connection...]')
+socket_object, address = sock.accept()
+print('Got connection from', address)
 
-s.listen(5)
-c = None
-
-print( '[Waiting for connection...]')
-c, addr = s.accept() #  (socket object, address info) return
-print( 'Got connection from', addr)
-
-print(c.recv(1024).decode('utf-8'))
+print(sock.recv(1024).decode('utf-8'))
 q = "ok signal"
-c.send(q.encode('utf-8'))
-c.close()
-
-
-'''
-s = socket.socket()
-host = socket.gethostname()
-port = 12222
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-s.bind((host, port))
-
-s.listen(5)
-c = None
-
-while True:
-   if c is None:
-       # Halts
-       print( '[Waiting for connection...]')
-       c, addr = s.accept() #  (socket object, address info) return
-       print( 'Got connection from', addr)
-   else:
-       # Halts
-       print( '[Waiting for response...]')
-       print((c.recv(1024)).decode('utf-8'))
-       q = input("Enter something to this client: ")
-       c.send(q.encode('utf-8'))
-'''
+sock.send(q.encode('utf-8'))
+sock.close()

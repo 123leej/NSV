@@ -34,17 +34,16 @@ if __name__ == "__main__":
 
         simulator = Simulator()
         try:
-            print(number_of_node)
             simulator.make_node_threads(number_of_node)
             time.sleep(2)
             simulator.show(dialog)
             simulator.run_algorithm(algorithm_file_path, number_of_node, zone_range)
 
         except InterruptedError:
-            simulator.stop_all_simulation(algorithm_file_path)
+            simulator.stop_all_simulation(algorithm_file_path, app)
 
         except SimulationFinishException:
-            simulator.stop_all_simulation(algorithm_file_path)
+            simulator.stop_all_simulation(algorithm_file_path, app)
 
     if selected_menu(params['flag']) is "Performance_Analysis":
         result_data_path = params["file_path"]

@@ -30,7 +30,7 @@ class Simulator:
             if idx is not 0:
                 data = string_parser(data)
                 self.detect_event(data)
-                self.window.node_update(data)
+                self.window.node_update(self.node_info["agent_a"], self.node_info["agent_b"], data)
                 time.sleep(0.1)
             else:
                 agent_a, agent_b, data = string_parser(data, option="init")
@@ -49,7 +49,8 @@ class Simulator:
             print(log)
             if idx is not 0:
                 self.log_manager.write_log(int(_node_number), log)
-                pass
+                if hasattr(self, 'window'):
+                    self.window.get_logs(log)
             else:
                 sock_object = make_socket_object(int(log))
                 self.set_nodes(int(_node_number)-1, {"port": int(log), "sock_obj": sock_object}, option="init")
@@ -63,11 +64,11 @@ class Simulator:
                     {"msg": "END"}
                 )
 
-    def stop_all_simulation(self, _file):
+    def stop_all_simulation(self, _file, _app):
         self.stop_algorithm(_file)
         self.stop_node()
         self.log_manager.merge_log_files()
-        sys.exit(self.app.exec_())
+        sys.exit(_app.exec_())
 
     def detect_event(self, _update_data):
         for node in _update_data:

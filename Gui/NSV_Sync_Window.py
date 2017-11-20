@@ -17,7 +17,7 @@ class SimulatorUi(object):
 
     def setup_ui(self, form):
         form.setObjectName("form")
-        form.setFixedSize(771, 516)
+        form.setFixedSize(771, 606)
 
         self.graphics_view = QtWidgets.QGraphicsView(form)
         self.graphics_scene = QtWidgets.QGraphicsScene(self.graphics_view)
@@ -33,6 +33,7 @@ class SimulatorUi(object):
         self.horizontal_layout.setObjectName("horizontalLayout")
 
         self.push_button = QtWidgets.QPushButton(self.horizontal_layout_widget)
+        self.push_button.setStyleSheet('QPushButton {color: black;}')
         size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         size_policy.setHorizontalStretch(0)
         size_policy.setVerticalStretch(0)
@@ -42,6 +43,22 @@ class SimulatorUi(object):
         self.push_button.clicked.connect(self.finish_simulation)
         self.horizontal_layout.addWidget(self.push_button)
 
+        self.horizontal_layout_widget_2 = QtWidgets.QWidget(form)
+        self.horizontal_layout_widget_2.setGeometry(QtCore.QRect(10, 521, 751, 80))
+        self.horizontal_layout_widget_2.setObjectName("horizontalLayoutWidget2")
+
+        self.horizontal_layout_2 = QtWidgets.QHBoxLayout(self.horizontal_layout_widget_2)
+        self.horizontal_layout_2.setContentsMargins(0, 0, 0, 0)
+        self.horizontal_layout_2.setObjectName("horizontalLayout2")
+
+        self.log_box = QtWidgets.QTextEdit(self.horizontal_layout_widget_2)
+        self.log_box.setFrameShape(QtWidgets.QFrame.Box)
+        self.log_box.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.log_box.ensureCursorVisible()
+        self.log_box.setReadOnly(True)
+        self.log_box.setObjectName("logBox")
+        self.horizontal_layout_2.addWidget(self.log_box)
+
         self.translate_ui(form)
         QtCore.QMetaObject.connectSlotsByName(form)
 
@@ -50,14 +67,13 @@ class SimulatorUi(object):
         form.setWindowTitle(_translate("Form", "KU NSV"))
         self.push_button.setText(_translate("Form", "Finish Simulation & Save result Data"))
 
-    def node_update(self, datas, agent_a, agent_b, data):
+    def node_update(self, agent_a, agent_b, data):
         temp_list = self.graphics_scene.items()
         for idx, item in enumerate(sorted(temp_list, key=self.node_numb_key)[:len(temp_list) - 2]):
-            if datas[idx][0] == agent_a or data[idx][0] == agent_b:
-                item.setPos(datas[idx][1] - 15, datas[idx][2] - 15)
+            if data[idx][0] == agent_a or data[idx][0] == agent_b:
+                item.setPos(data[idx][1] - 15, data[idx][2] - 15)
             else:
-                item.setPos(datas[idx][1] - 7.5, datas[idx][2] - 7.5)
-            print(str(idx) + " " + str(datas[idx][1]) + " " + str(datas[idx][2]))
+                item.setPos(data[idx][1] - 7.5, data[idx][2] - 7.5)
 
         self.graphics_view.updateSceneRect(self.graphics_scene.sceneRect())
         QtCore.QCoreApplication.processEvents()
@@ -65,10 +81,12 @@ class SimulatorUi(object):
     def node_numb_key(self, _item):
         return _item.zValue()
 
-    def draw_nodes(self, _graphics_scene, agent_A, agent_B, datas):
+    def get_logs(self, _log):
+        self.log_box.setText(_log)
 
+    def draw_nodes(self, agent_a, agent_b, datas):
         for data in datas:
-            if data[0] == agent_A or data[0] == agent_B:
+            if data[0] == agent_a or data[0] == agent_b:
                 a = QtWidgets.QGraphicsEllipseItem(1, 1, 30, 30)
                 a.setPen(QtGui.QPen(QtCore.Qt.black, 2))
                 a.setBrush(QtGui.QBrush(QtCore.Qt.red, QtCore.Qt.SolidPattern))
@@ -89,7 +107,7 @@ class SimulatorUi(object):
                 c = QtWidgets.QGraphicsEllipseItem(356, 55, 300, 300)
             c.setPen(QtGui.QPen(QtCore.Qt.red, 2))
             c.setZValue(i)
-            _graphics_scene.addItem(c)
+            self.graphics_scene.addItem(c)
 
     def finish_simulation(self):
         raise SimulationFinishException
