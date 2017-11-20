@@ -37,13 +37,17 @@ class Analyzer:
         '''
         # need to get number of nodes.
         number_of_nodes = 10
-        print(1)
         self.result_1 = self.make_chart_data(number_of_nodes, input_data_1, 1)
-        print(self.result_1)
         self.result_2 = self.make_chart_data(number_of_nodes, input_data_1, 2)
-        print(self.result_2)
+
+        self.average_data_1 = self.get_average_data("Fuck!!")
+        self.average_data_2 = self.get_average_data("You!!")
 
         return True
+
+    def get_average_data(self, _msg):
+        data = "Average Data: " + _msg + "\n\n"
+        return data
 
     def make_chart_data(self, _number_of_nodes, _input_data, _num):
         frame_width = 30 + 20 * _number_of_nodes + 10 * (_number_of_nodes - 1)
@@ -68,13 +72,17 @@ class Analyzer:
 
     def get_log_to_string(self):
         result = ""
-        with open(self.log_file, "r") as log_file:
+        with open(self.log_file, "r") as file:
             while True:
-                temp = log_file.readline()
-                if temp is None:
+                temp = file.readline()
+                if not temp:
                     break
-                result = result.join(temp)
+                result += temp
         return str(result)
 
+    def result_text(self):
+        return [self.average_data_1 + self.get_log_to_string(), self.average_data_2 + self.get_log_to_string()]
+
+
     def start(self, dialog):
-        self.window = AnalysisResultUi(dialog, self.result_1, self.result_2, "test")
+        self.window = AnalysisResultUi(dialog, self.result_1, self.result_2, self.result_text())

@@ -17,7 +17,7 @@ class SimulatorUi(object):
 
     def setup_ui(self, form):
         form.setObjectName("form")
-        form.resize(771, 516)
+        form.setFixedSize(771, 516)
 
         self.graphics_view = QtWidgets.QGraphicsView(form)
         self.graphics_scene = QtWidgets.QGraphicsScene(self.graphics_view)

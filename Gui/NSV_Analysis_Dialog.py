@@ -17,7 +17,7 @@ class SetResultDataUi(object):
     def setup_ui(self, dialog):
         self.closer = dialog
         dialog.setObjectName("Dialog")
-        dialog.resize(400, 300)
+        dialog.setFixedSize(400, 300)
 
         self.vertical_layout_widget_1 = QtWidgets.QWidget(dialog)
         self.vertical_layout_widget_1.setGeometry(QtCore.QRect(9, 9, 381, 20))

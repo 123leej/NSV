@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class NSVUi(object):
     def setup_ui(self, dialog):
         dialog.setObjectName("Dialog")
-        dialog.resize(400, 226)
+        dialog.setFixedSize(400, 226)
 
         self.vertical_layout_widget = QtWidgets.QWidget(dialog)
         self.vertical_layout_widget.setGeometry(QtCore.QRect(9, 9, 381, 211))
