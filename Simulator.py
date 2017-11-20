@@ -21,7 +21,8 @@ class Simulator:
     def make_node_threads(self, _number_of_nodes):
         for node_number in range(0, int(_number_of_nodes)):
             self.log_manager.open_log_file(node_number+1)
-            threading.Thread(target=self.run_node, args=(str(node_number+1),)).start()
+            t = threading.Thread(target=self.run_node, args=(str(node_number+1),))
+            t.start()
 
     def run_algorithm(self, _file, _node, _zone_range):
         self.zone_range = _zone_range
