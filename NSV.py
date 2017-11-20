@@ -1,7 +1,7 @@
 import sys
 from Gui.NSV_First_Dialog import NSVUi
 from Simulator import Simulator
-from Analyze_Result_Data import ShowResultDataUi
+from Analyzer import Analyzer
 from Exception.NSVExceptions import SimulationFinishException
 from PyQt5 import QtCore, QtWidgets
 import time
@@ -48,5 +48,7 @@ if __name__ == "__main__":
 
     if selected_menu(params['flag']) is "Performance_Analysis":
         result_data_path = params["file_path"]
-        analyze_result = ShowResultDataUi(dialog)
-
+        analyzer = Analyzer()
+        if analyzer.show_result_data():
+            analyzer.start(dialog)
+            app.exec_()

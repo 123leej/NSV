@@ -1,3 +1,0 @@
-22:22:22|SEND|agent1|node3|sending test data
-22:22:23|SEND|agent1|node4|sending test data
-22:22:24|SEND|agent1|node5|sending test data
