@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.join(ROOT, '..'))
 
 
 class Analyzer:
-    def __init(self, _log_file):
+    def __init__(self, _log_file):
         self.log_file = _log_file
         self.result_1 = ""
         self.result_2 = ""
@@ -37,9 +37,11 @@ class Analyzer:
         '''
         # need to get number of nodes.
         number_of_nodes = 10
-
+        print(1)
         self.result_1 = self.make_chart_data(number_of_nodes, input_data_1, 1)
+        print(self.result_1)
         self.result_2 = self.make_chart_data(number_of_nodes, input_data_1, 2)
+        print(self.result_2)
 
         return True
 
@@ -72,7 +74,7 @@ class Analyzer:
                 if temp is None:
                     break
                 result = result.join(temp)
-        return result
+        return str(result)
 
     def start(self, dialog):
-        self.window = AnalysisResultUi(dialog, self.result_1, self.result_2, self.get_log_to_string())
+        self.window = AnalysisResultUi(dialog, self.result_1, self.result_2, "test")
