@@ -50,9 +50,14 @@ class SimulatorUi(object):
         form.setWindowTitle(_translate("Form", "KU NSV"))
         self.push_button.setText(_translate("Form", "Finish Simulation & Save result Data"))
 
-    def node_update(self, datas):
-        for idx, item in enumerate(sorted(self.graphics_scene.items(), key=self.node_numb_key)):
-            item.setPos(datas[idx][1], datas[idx][2])
+    def node_update(self, datas, agent_a, agent_b, data):
+        temp_list = self.graphics_scene.items()
+        for idx, item in enumerate(sorted(temp_list, key=self.node_numb_key)[:len(temp_list) - 2]):
+            if datas[idx][0] == agent_a or data[idx][0] == agent_b:
+                item.setPos(datas[idx][1] - 15, datas[idx][2] - 15)
+            else:
+                item.setPos(datas[idx][1] - 7.5, datas[idx][2] - 7.5)
+            print(str(idx) + " " + str(datas[idx][1]) + " " + str(datas[idx][2]))
 
         self.graphics_view.updateSceneRect(self.graphics_scene.sceneRect())
         QtCore.QCoreApplication.processEvents()
@@ -60,7 +65,7 @@ class SimulatorUi(object):
     def node_numb_key(self, _item):
         return _item.zValue()
 
-    def draw_nodes(self, agent_A, agent_B, datas):
+    def draw_nodes(self, _graphics_scene, agent_A, agent_B, datas):
 
         for data in datas:
             if data[0] == agent_A or data[0] == agent_B:
@@ -75,6 +80,16 @@ class SimulatorUi(object):
                 b.setBrush(QtGui.QBrush(QtCore.Qt.yellow, QtCore.Qt.SolidPattern))
                 b.setZValue(data[0])
                 self.graphics_scene.addItem(b)
+
+        len_data = len(datas)
+        for i in range(len_data, len_data+2):
+            if i is len_data:
+                c = QtWidgets.QGraphicsEllipseItem(105, 55, 300, 300)
+            if i is len_data+1:
+                c = QtWidgets.QGraphicsEllipseItem(356, 55, 300, 300)
+            c.setPen(QtGui.QPen(QtCore.Qt.red, 2))
+            c.setZValue(i)
+            _graphics_scene.addItem(c)
 
     def finish_simulation(self):
         raise SimulationFinishException
