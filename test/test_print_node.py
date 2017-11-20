@@ -53,10 +53,14 @@ class SimulatorUi(object):
         self.push_button.setText(_translate("Form", "Summary"))
 
 
-    def node_update(self, _graphics_view, _graphics_scene, datas):
+    def node_update(self, _graphics_view, _graphics_scene, agent_a, agent_b, datas):
         print("UPDATE")
-        for idx, item in enumerate(sorted(_graphics_scene.items(), key = self.node_numb_key)):
-            item.setPos(datas[idx][1], datas[idx][2])
+        temp_list = _graphics_scene.items()
+        for idx, item in enumerate(sorted(temp_list, key = self.node_numb_key)[:len(temp_list)-2]):
+            if datas[idx][0] == agent_a or data[idx][0] == agent_b:
+                item.setPos(datas[idx][1]-15, datas[idx][2]-15)
+            else:
+                item.setPos(datas[idx][1]-7.5, datas[idx][2]-7.5)
             print(str(idx) + " " + str(datas[idx][1]) + " "+ str(datas[idx][2]))
 
         _graphics_view.updateSceneRect(_graphics_scene.sceneRect())
@@ -64,13 +68,13 @@ class SimulatorUi(object):
 
     def node_numb_key(self, _item):
         return _item.zValue()
-    def draw_nodes(self, _graphics_scene, agent_A, agent_B, datas):
 
+    def draw_nodes(self, _graphics_scene, agent_A, agent_B, datas):
         for data in datas:
             if data[0] == agent_A or data[0] == agent_B:
                 a = QtWidgets.QGraphicsEllipseItem(1, 1, 30, 30)
                 a.setPen(QtGui.QPen(QtCore.Qt.black, 2))
-                a.setBrush(QtGui.QBrush(QtCore.Qt.red, QtCore.Qt.SolidPattern))
+                a.setBrush(QtGui.QBrush(QtCore.Qt.red, QtGui.QPixmap(5, 5)))
                 a.setZValue(data[0])
                 _graphics_scene.addItem(a)
             else:
@@ -80,6 +84,15 @@ class SimulatorUi(object):
                 b.setZValue(data[0])
                 _graphics_scene.addItem(b)
 
+        len_data = len(datas)
+        for i in range(len_data, len_data+2):
+            if i is len_data:
+                c = QtWidgets.QGraphicsEllipseItem(105, 55, 300, 300)
+            if i is len_data+1:
+                c = QtWidgets.QGraphicsEllipseItem(356, 55, 300, 300)
+            c.setPen(QtGui.QPen(QtCore.Qt.red, 2))
+            c.setZValue(i)
+            _graphics_scene.addItem(c)
 
 import sys
 datas = [
@@ -159,7 +172,7 @@ agentb=datas[0][1]
 ui.draw_nodes(gs, agenta, agentb, datas[0][2:])
 
 for data in datas[1:]:
-    ui.node_update(gv, gs, data)
+    ui.node_update(gv, gs, agenta, agentb, data)
     time.sleep(0.1)
 
 
