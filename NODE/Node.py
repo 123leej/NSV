@@ -11,15 +11,16 @@ class Node:
         script, nodeNum = argv
         self.nodeNum = int(nodeNum)
         # print("Node #", self.nodeNum, sep="")
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
         self.host = '127.0.0.1'
-        self.port = 21000 + self.nodeNum
+        self.port = 20400 + self.nodeNum
         print(self.port)
         while True:
             try:
+                self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.s.connect((self.host, self.port))
                 break
-            except:
+            except Exception:
                 pass
         self.print_log("SET", self.nodeNum, "", "Node Created.")
         self.isAgent = self.get_type()
@@ -58,12 +59,12 @@ class Node:
 
     def agent_in(self, nodeNum):
         # nodeNum is new Node's ID.
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         while True:
             try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 sock.connect((self.host, 40000+nodeNum))
                 break
-            except:
+            except Exception:
                 pass
         self.print_log("IN", nodeNum, self.nodeNum, "")
         rcvData = sock.recv(1024)
@@ -78,8 +79,13 @@ class Node:
             prevAgentNum = data[0]
             prevAgentPort = data[1]
             sock.close()
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.connect((self.host, 40000+prevAgentPort))
+            while True:
+                try:
+                    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    sock.connect((self.host, 40000+prevAgentPort))
+                    break
+                except Exception:
+                    pass
             sock.send(pickle.dumps(nodeNum))
             self.print_log("SEND", self.nodeNum, prevAgentNum,
                 "Request Node's Info to Prev Agent.")
@@ -115,12 +121,12 @@ class Node:
 
     def node_in(self, nodeNum):
         # nodeNum is new Agent's ID.
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         while True:
             try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 sock.connect((self.host, 40000+nodeNum))
                 break
-            except:
+            except Exception:
                 pass
         self.print_log("IN", self.nodeNum, nodeNum, "")
         if self.recentAgent is not None:

@@ -1,3 +1,4 @@
+import os
 import time
 import datetime
 from Exception.NSVExceptions import LogFileWriteError
@@ -25,7 +26,7 @@ class LogManager:
         self.log_file_buffer = None
 
     def merge_log_files(self):
-        result_file_name = datetime.datetime.now().strftime('%Y-%m-%d') + "_simulation.txt"
+        result_file_name = datetime.datetime.now().strftime('%Y-%m-%d') + "/simulation.txt"
         with open("./log/" + result_file_name, "w") as result_file:
             for i in range(0, len(self.log_file)):
                 with open("./log/" + self.log_file[i], "r") as node_log_file:
@@ -34,8 +35,12 @@ class LogManager:
                         if not temp:
                             result_file.write('\n')
                         result_file.write(temp)
-
         self.log_parser(result_file_name)
+
+        for i in range(0, len(self.log_file)):
+            os.remove("./log/" + self.log_file[i])
+
+        return True
 
     def log_parser(self, _result):
         log_buffer = []

@@ -84,13 +84,22 @@ class SimulatorUi(object):
     def get_logs(self, _log):
         self.log_box.setText(_log)
 
-    def draw_nodes(self, agent_a, agent_b, datas):
+    def draw_nodes(self, agent_a, agent_b, zone_range, datas):
+        temp_agent_a = []
+        temp_agent_b = []
         for data in datas:
             if data[0] == agent_a or data[0] == agent_b:
                 a = QtWidgets.QGraphicsEllipseItem(1, 1, 30, 30)
                 a.setPen(QtGui.QPen(QtCore.Qt.black, 2))
                 a.setBrush(QtGui.QBrush(QtCore.Qt.red, QtCore.Qt.SolidPattern))
                 a.setZValue(data[0])
+                if data[0] == agent_a:
+                    temp_agent_a.append(data[1])
+                    temp_agent_a.append(data[2])
+                else:
+                    temp_agent_b.append(data[1])
+                    temp_agent_b.append(data[2])
+
                 self.graphics_scene.addItem(a)
             else:
                 b = QtWidgets.QGraphicsEllipseItem(1, 1, 15, 15)
@@ -99,13 +108,12 @@ class SimulatorUi(object):
                 b.setZValue(data[0])
                 self.graphics_scene.addItem(b)
 
-        # TODO it must fallow agent location not fixed
         len_data = len(datas)
         for i in range(len_data, len_data+2):
             if i is len_data:
-                c = QtWidgets.QGraphicsEllipseItem(105, 55, 300, 300)
+                c = QtWidgets.QGraphicsEllipseItem(temp_agent_a[0]-zone_range, temp_agent_a[1]-zone_range, zone_range*2, zone_range*2)
             if i is len_data+1:
-                c = QtWidgets.QGraphicsEllipseItem(356, 55, 300, 300)
+                c = QtWidgets.QGraphicsEllipseItem(temp_agent_b[0]-zone_range, temp_agent_b[1]-zone_range, zone_range*2, zone_range*2)
             c.setPen(QtGui.QPen(QtCore.Qt.red, 2))
             c.setZValue(i)
             self.graphics_scene.addItem(c)

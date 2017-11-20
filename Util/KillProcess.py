@@ -9,3 +9,4 @@ def kill_process(process_name):
             process.terminate()
         else:
             pass
+    return True

@@ -2,7 +2,6 @@ import sys
 from Gui.NSV_First_Dialog import NSVUi
 from Simulator import Simulator
 from Analyzer import Analyzer
-from Exception.NSVExceptions import SimulationFinishException
 from PyQt5 import QtCore, QtWidgets
 import time
 
@@ -33,21 +32,14 @@ if __name__ == "__main__":
         zone_range = params["zone_range"]
 
         simulator = Simulator()
-        try:
-            simulator.make_node_threads(number_of_node)
-            while True:
-                if False not in simulator.get_thread_is_running():
-                    break
-                time.sleep(0.1)
-                print(1)
-            simulator.show(dialog)
-            simulator.run_algorithm(algorithm_file_path, number_of_node, zone_range)
+        simulator.make_node_threads(number_of_node)
+        while True:
+            if False not in simulator.get_thread_is_running():
+                break
+            time.sleep(0.1)
 
-        except KeyboardInterrupt:
-            simulator.stop_all_simulation(algorithm_file_path, app)
-
-        except SimulationFinishException:
-            simulator.stop_all_simulation(algorithm_file_path, app)
+        simulator.show(dialog, algorithm_file_path, app)
+        simulator.run_algorithm(algorithm_file_path, number_of_node, zone_range)
 
     if selected_menu(params['flag']) is "Performance_Analysis":
         result_data_path = params["file_path"]

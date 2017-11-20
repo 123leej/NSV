@@ -10,6 +10,7 @@ from Util.LogManager import LogManager
 from Util.MakeSocket import make_socket_object
 from Util.SendSignal import send_signal
 from Util.Parser import string_parser
+from Exception.NSVExceptions import SimulationFinishException
 
 
 class Simulator:
@@ -45,20 +46,19 @@ class Simulator:
                 agent_a, agent_b, data = string_parser(data, option="init")
                 self.set_nodes_info(data, agent_a, agent_b)
                 self.detect_event(data)
-                self.window.draw_nodes(self.node_info["agent_a"], self.node_info["agent_b"], data)
+                self.window.draw_nodes(self.node_info["agent_a"], self.node_info["agent_b"], _zone_range, data)
 
     def stop_algorithm(self, _file):
         non_extension = os.path.splitext(_file)[0]
         process_name = os.path.split(non_extension)[1]
-        kill_process(process_name)
+        return kill_process(process_name)
 
     def run_node(self, _node_number):
         for idx, log in enumerate(run_process("python3 NODE/Node.py "+str(_node_number))):
             log = log.decode('utf-8')
             if idx is not 0:
                 self.log_manager.write_log(int(_node_number), log)
-                if hasattr(self, 'window'):
-                    self.window.get_logs(log)
+                # TODO print log to ui
             else:
                 self.lock.acquire()
                 sock_object = make_socket_object(int(log))
@@ -76,10 +76,11 @@ class Simulator:
                 )
 
     def stop_all_simulation(self, _file, _app):
-        self.stop_algorithm(_file)
-        self.stop_node()
-        self.log_manager.merge_log_files()
-        sys.exit(_app.exec_())
+        print(1)
+        if self.stop_algorithm(_file):
+            self.stop_node()
+            if self.log_manager.merge_log_files():
+                sys.exit(_app.exec_())
 
     def detect_event(self, _update_data):
         for node in _update_data:
@@ -88,13 +89,13 @@ class Simulator:
                 len_from_b = node[4]
 
                 if len_from_a > self.zone_range and len_from_b > self.zone_range:
+                    if self.node_info[node[0]]["recent_agent"] is not None:
+                        send_signal(
+                            self.node_info[node[0]]["sock_obj"],
+                            {"msg": "OUT"}
+                        )
 
-                    send_signal(
-                        self.node_info[node[0]]["sock_obj"],
-                        {"msg": "OUT"}
-                    )
-
-                    self.set_nodes(node[0], {"agent": None, "recent_agent": None})
+                    self.set_nodes(node[0], {"agent": None})
 
                 else:
                     if len_from_a > len_from_b:
@@ -147,7 +148,7 @@ class Simulator:
                 len_from_b = node[4]
 
                 if len_from_a > self.zone_range and len_from_b > self.zone_range:
-                    self.set_nodes(node[0], {"agent": None})
+                    self.set_nodes(node[0], {"agent": None, "recent_agent": None})
 
                 else:
                     if len_from_a > len_from_b:
@@ -168,5 +169,8 @@ class Simulator:
         except KeyError:
             self.node_info[_node_num] = _info
 
-    def show(self, _dialog):
-        self.window = SimulatorUi(_dialog)
+    def show(self, _dialog, _file, _app):
+        try:
+            self.window = SimulatorUi(_dialog)
+        except SimulationFinishException:
+            self.stop_all_simulation(_file, _app)
