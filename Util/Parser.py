@@ -22,3 +22,25 @@ def string_parser(data, option=None):
         return agent_a, agent_b, result
     else:
         return result
+
+
+def json_parser(_log_file):
+    json_list = {}
+    i = 0
+    while True:
+        line = _log_file.readline()
+
+        if not line:
+            break
+
+        line_list = line.split("|")
+        temp_list = {}
+        temp_list['Time'] = line_list[0]
+        temp_list['Command'] = line_list[1]
+        temp_list['From'] = line_list[2]
+        temp_list['To'] = line_list[3]
+        temp_list['Msg'] = line_list[4]
+
+        json_list[i] = temp_list
+        i += 1
+    return json_list
