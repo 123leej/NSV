@@ -13,10 +13,8 @@ class LogManager:
     def open_log_file(self, _node_number):
         self.log_file.append("node" + str(_node_number) + "_log.txt")
         folder_name = "log"
-        try:
-            os.stat(os.path.dirname(folder_name))
-        except FileNotFoundError:
-            os.mkdir(os.path.dirname(folder_name))
+
+        os.makedirs(folder_name, exist_ok=True)
 
         self.log_file_buffer.append(open(make_path((folder_name, self.log_file[_node_number-1])), "a"))
 
@@ -33,23 +31,20 @@ class LogManager:
         self.log_file_buffer = None
 
     def merge_log_files(self):
+
         result_file_name = "simulation.txt"
         folder_name = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
-
-        try:
-            os.stat(os.path.dirname(folder_name))
-        except FileNotFoundError:
-            os.mkdir(os.path.dirname(folder_name))
-
+        os.makedirs(make_path(("log", folder_name)), exist_ok=True)
         with open(make_path(("log", folder_name, result_file_name)), "w") as result_file:
             for i in range(0, len(self.log_file)):
                 with open(make_path(("log", self.log_file[i])), "r") as node_log_file:
                     while True:
                         temp = node_log_file.readline()
                         if not temp:
-                            result_file.write('\n')
+                            break
                         result_file.write(temp)
-        self.log_parser(result_file_name)
+        self.log_parser(make_path((folder_name, result_file_name)))
+        print(7)
 
         for i in range(0, len(self.log_file)):
             os.remove(make_path(("log", self.log_file[i])))
