@@ -1,5 +1,44 @@
-22:22:22.123|SEND|agent1|node3|sending test data
-22:22:22.554|SEND|agent1|node4|sending test data
-22:22:23.001|SEND|agent1|node5|sending test data
-22:22:24.010|SEND|agent1|node6|sending test data
-22:22:25.100|SEND|agent1|node7|sending test data
+22:22:22.123|SET|node1||Node Created.
+22:22:22.124|SET|node2||Node Created.
+22:22:23.125|SET|node3||Node Created.
+22:22:24.130|SET|node4||Node Created.
+22:22:25.132|SET|node5||Node Created.
+22:22:25.133|SET|node6||Node Created.
+22:22:25.135|SET|node7||Node Created.
+22:22:25.138|SET|node8||Node Created.
+22:22:25.140|SET|node9||Node Created.
+22:22:25.142|SET|node10||Node Created.
+22:22:25.145|SET|node11||Node Created.
+22:22:25.146|SET|node12||Node Created.
+22:22:25.147|SET|node13||Node Created.
+22:22:25.150|SET|node14||Node Created.
+22:22:25.155|SET|node7||This Node is Agent.
+22:22:25.160|SET|node14||This Node is Agent.
+22:22:25.320|IN|node1|node7|
+22:22:25.325|IN|node2|node7|
+22:22:25.330|IN|node3|node7|
+22:22:25.335|IN|node4|node7|
+22:22:25.342|IN|node5|node7|
+22:22:25.348|IN|node6|node7|
+22:22:25.355|IN|node8|node14|
+22:22:25.360|IN|node9|node14|
+22:22:25.365|IN|node10|node14|
+22:22:25.369|IN|node11|node14|
+22:22:25.371|IN|node12|node14|
+22:22:25.390|IN|node13|node14|
+22:22:25.550|OUT|node3|node7|
+22:22:25.555|SET|||Test1
+22:22:25.560|GET_REQ||node7|Request Node #node3 info.
+22:22:25.562|SET|node7||Prev Agent Delete Node.
+22:22:25.565|IN|node3|node14|
+22:22:25.773|SET|node14||Agent Update Node List.
+22:22:25.781|SET|||Test2
+22:22:25.790|OUT|node4|node7|
+22:22:25.797|GET_REQ||node7|Request Node #node4 info.
+22:22:25.802|SET|node7||Prev Agent Delete Node.
+22:22:25.805|IN|node4|node14|
+22:22:25.998|SET|node14||Agent Update Node List.
+22:22:26.005|SET|||Test3
+22:22:26.012|SET|node15||Node Created.
+22:22:25.205|IN|node15|node14|
+22:22:26.206|SET|||Test4

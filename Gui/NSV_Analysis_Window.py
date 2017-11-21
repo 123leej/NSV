@@ -76,11 +76,11 @@ class AnalysisResultUi(object):
 
         self.label.setText(_translate("Form", "TextLabel1"))
         self.text_box.setText(_translate("Form", "TextLabel2"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Form", "Tab 1"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Form", "Hand-Over"))
 
         self.label_3.setText(_translate("Form", "TextLabel3"))
         self.text_box_2.setText(_translate("Form", "TextLabel4"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Form", "Tab 2"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Form", "Sync Time"))
 
     def tab_event(self):
         if self.tabWidget.currentIndex() is 1:
