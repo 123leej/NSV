@@ -81,7 +81,8 @@ class Simulator:
         if self.stop_algorithm(_file):
             self.stop_node()
             if self.log_manager.merge_log_files():
-                sys.exit(_app.exec_())
+                # TODO APPLICATION DO NOT FINISHED
+                sys.exit(0)
 
     def detect_event(self, _update_data):
         for node in _update_data:
