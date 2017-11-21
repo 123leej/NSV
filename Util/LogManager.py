@@ -1,6 +1,7 @@
 import os
 import time
 import datetime
+from Util.PathMaker import make_path
 from Exception.NSVExceptions import LogFileWriteError
 
 
@@ -11,7 +12,13 @@ class LogManager:
 
     def open_log_file(self, _node_number):
         self.log_file.append("node" + str(_node_number) + "_log.txt")
-        self.log_file_buffer.append(open("./log/" + self.log_file[_node_number-1], "a"))
+        folder_name = "log"
+        try:
+            os.stat(os.path.dirname(folder_name))
+        except FileNotFoundError:
+            os.mkdir(os.path.dirname(folder_name))
+
+        self.log_file_buffer.append(open(make_path((folder_name, self.log_file[_node_number-1])), "a"))
 
     def write_log(self, _node_number, _log):
         try:
@@ -26,11 +33,17 @@ class LogManager:
         self.log_file_buffer = None
 
     def merge_log_files(self):
-        result_file_name = datetime.datetime.now().strftime('%Y-%m-%d') + "/simulation.txt"
-        # TODO log file create fail
-        with open("./log/" + result_file_name, "w") as result_file:
+        result_file_name = "simulation.txt"
+        folder_name = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
+
+        try:
+            os.stat(os.path.dirname(folder_name))
+        except FileNotFoundError:
+            os.mkdir(os.path.dirname(folder_name))
+
+        with open(make_path(("log", folder_name, result_file_name)), "w") as result_file:
             for i in range(0, len(self.log_file)):
-                with open("./log/" + self.log_file[i], "r") as node_log_file:
+                with open(make_path(("log", self.log_file[i])), "r") as node_log_file:
                     while True:
                         temp = node_log_file.readline()
                         if not temp:
@@ -39,13 +52,13 @@ class LogManager:
         self.log_parser(result_file_name)
 
         for i in range(0, len(self.log_file)):
-            os.remove("./log/" + self.log_file[i])
+            os.remove(make_path(("log", self.log_file[i])))
 
         return True
 
     def log_parser(self, _result):
         log_buffer = []
-        with open("./log/" + _result, "r") as result_file:
+        with open(make_path(("log", _result)), "r") as result_file:
             while True:
                 temp = result_file.readline()
                 if not temp:
@@ -54,7 +67,7 @@ class LogManager:
 
         log_buffer = self.parsing(log_buffer)
 
-        with open("./log/" + _result, "w") as result_file:
+        with open(make_path(("log", _result)), "w") as result_file:
             for log in log_buffer:
                 result_file.write(log)
 
