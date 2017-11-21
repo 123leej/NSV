@@ -26,8 +26,8 @@ class Simulator:
             self.is_thread_run.append(False)
 
         for node_number in range(0, int(_number_of_nodes)):
-            self.log_manager.open_log_file(node_number+1)
-            t = threading.Thread(target=self.run_node, args=(str(node_number+1),))
+            self.log_manager.open_log_file(node_number)
+            t = threading.Thread(target=self.run_node, args=(str(node_number),))
             t.start()
 
     def get_thread_is_running(self):
@@ -64,8 +64,8 @@ class Simulator:
             else:
                 self.lock.acquire()
                 sock_object = make_socket_object(int(log))
-                self.set_nodes(int(_node_number)-1, {"port": int(log), "sock_obj": sock_object}, option="init")
-                self.is_thread_run[int(_node_number) - 1] = True
+                self.set_nodes(int(_node_number), {"port": int(log), "sock_obj": sock_object}, option="init")
+                self.is_thread_run[int(_node_number)] = True
                 self.lock.release()
 
     def stop_node(self):
@@ -86,7 +86,7 @@ class Simulator:
 
     def detect_event(self, _update_data):
         for node in _update_data:
-            if node[0] is not self.node_info["agent_a"] or node[0] is not self.node_info["agent_b"]:
+            if node[0] is not self.node_info["agent_a"] and node[0] is not self.node_info["agent_b"]:
                 len_from_a = node[3]
                 len_from_b = node[4]
 
@@ -116,7 +116,6 @@ class Simulator:
                                 self.node_info[node[0]]["sock_obj"],
                                 {"node_num": self.node_info["agent_b"], "msg": "IN"}
                             )
-
                             self.set_nodes(node[0], {"agent": "B", "recent_agent": "B"})
 
                     if len_from_a <= len_from_b:
@@ -145,7 +144,7 @@ class Simulator:
         self.set_nodes("agent_b", _agent_b, option="init")
 
         for node in _init_data:
-            if node[0] is not self.node_info["agent_a"] or node[0] is not self.node_info["agent_b"]:
+            if node[0] is not self.node_info["agent_a"] and node[0] is not self.node_info["agent_b"]:
                 len_from_a = node[3]
                 len_from_b = node[4]
 
@@ -158,8 +157,10 @@ class Simulator:
 
                     if len_from_a <= len_from_b:
                         self.set_nodes(node[0], {"agent": "A", "recent_agent": "A"})
+                send_signal(self.node_info[node[0]]["sock_obj"], {"msg": False})
             else:
-                pass
+                send_signal(self.node_info[node[0]]["sock_obj"], {"msg": True})
+        print(self.node_info)
 
     def set_nodes(self, _node_num, _info, option=None):
         try:

@@ -16,13 +16,13 @@ class LogManager:
 
         os.makedirs(folder_name, exist_ok=True)
 
-        self.log_file_buffer.append(open(make_path((folder_name, self.log_file[_node_number-1])), "a"))
+        self.log_file_buffer.append(open(make_path((folder_name, self.log_file[_node_number])), "a"))
 
     def write_log(self, _node_number, _log):
         try:
-            self.log_file_buffer[_node_number-1].write(_log + "\n")
+            self.log_file_buffer[_node_number].write(_log + "\n")
         except Exception:
-            raise LogFileWriteError('LogFileWriteError: "' + self.log_file[_node_number-1] + 'file can\'t open')
+            raise LogFileWriteError('LogFileWriteError: "' + self.log_file[_node_number] + 'file can\'t open')
 
     def save_logs(self):
         for i in range(0, len(self.log_file_buffer)):
@@ -44,7 +44,6 @@ class LogManager:
                             break
                         result_file.write(temp)
         self.log_parser(make_path((folder_name, result_file_name)))
-        print(7)
 
         for i in range(0, len(self.log_file)):
             os.remove(make_path(("log", self.log_file[i])))
