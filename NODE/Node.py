@@ -59,6 +59,15 @@ class Node:
 
     def agent_in(self, nodeNum):
         # nodeNum is new Node's ID.
+        if len(self.nodeList) != 0:
+            nodeInList = False
+            for i in self.nodeList:
+                if i[0] == nodeNum:
+                    nodeInList = True
+                    break
+            if nodeInList is True:
+                # Node Just Re-Enter in Agent's Zone.
+                return
         self.print_log("IN", "NSV", self.nodeNum, str(nodeNum))
         sock_temp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock_temp.bind(('', 40000+self.nodeNum))
@@ -76,7 +85,6 @@ class Node:
         else:
             # data structure: [ [prevAgentNum], [prevAgentPort] ]
             prevAgentNum = data[0]
-            prevAgentPort = data[1]
             tgtSock.close()
             while True:
                 try:
@@ -99,7 +107,7 @@ class Node:
 
     def prev_agent(self):
         # print("Agent #", self.nodeNum, " Get Signal", sep="")
-        self.print_log("DBG", "NSV", self.nodeNum,"GET_REQ")
+        self.print_log("DBG", "NSV", self.nodeNum, "GET_REQ")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.bind(('', 40000+self.nodeNum))
         sock.listen(5)
@@ -120,6 +128,10 @@ class Node:
         self.print_log("SET", self.nodeNum, "", "Prev Agent Delete Node.")
 
     def node_in(self, nodeNum):
+        if self.recentAgent == nodeNum:
+            # Node Just Re-Enter in Agent's Zone.
+            self.agentInfo = [nodeNum, 20000+nodeNum]
+            return
         self.print_log("IN", self.nodeNum, nodeNum, "NODE_SIDE."+str(nodeNum))
         # nodeNum is new Agent's ID.
         while True:
