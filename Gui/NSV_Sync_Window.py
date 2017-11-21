@@ -5,8 +5,6 @@
 # Created by: PyQt5 UI code generator 5.9.1
 #
 # WARNING! All changes made in this file will be lost!
-import sys
-from Exception.NSVExceptions import SimulationFinishException
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
@@ -18,7 +16,7 @@ class SimulatorUi(object):
 
     def setup_ui(self, form):
         form.setObjectName("form")
-        form.setFixedSize(771, 606)
+        form.setFixedSize(771, 656)
 
         self.graphics_view = QtWidgets.QGraphicsView(form)
         self.graphics_scene = QtWidgets.QGraphicsScene(self.graphics_view)
@@ -45,7 +43,7 @@ class SimulatorUi(object):
         self.horizontal_layout.addWidget(self.push_button)
 
         self.horizontal_layout_widget_2 = QtWidgets.QWidget(form)
-        self.horizontal_layout_widget_2.setGeometry(QtCore.QRect(10, 521, 751, 80))
+        self.horizontal_layout_widget_2.setGeometry(QtCore.QRect(10, 521, 751, 130))
         self.horizontal_layout_widget_2.setObjectName("horizontalLayoutWidget2")
 
         self.horizontal_layout_2 = QtWidgets.QHBoxLayout(self.horizontal_layout_widget_2)
@@ -57,6 +55,16 @@ class SimulatorUi(object):
         self.log_box.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.log_box.ensureCursorVisible()
         self.log_box.setReadOnly(True)
+        self.log_box.setText(" ########################################################################################")
+        self.log_box.append("                                                                         __          __   ___________  __           __")
+        self.log_box.append("                                                                        /    \      /  / /  __________/ \  \         /  /")
+        self.log_box.append("                                                                       /  /\  \    /  / /  /________      \  \      /  /")
+        self.log_box.append("                                                                      /  /  \  \  /  /  \_________  \      \  \   /  /")
+        self.log_box.append("                                                                     /  /    \  \/  /  __________/  /       \  \/  /")
+        self.log_box.append("                                                                    / _/      \__ / /____________/         \__ /\n")
+        self.log_box.append(" ########################################################################################")
+        self.log_box.append("  ================================== SIMULATION START ===================================")
+        self.log_box.append(" ########################################################################################")
         self.log_box.setObjectName("logBox")
         self.horizontal_layout_2.addWidget(self.log_box)
 
@@ -83,7 +91,8 @@ class SimulatorUi(object):
         return _item.zValue()
 
     def get_logs(self, _log):
-        self.log_box.setText(_log)
+        self.log_box.append(_log)
+        self.log_box.moveCursor(QtGui.QTextCursor.End)
 
     def draw_nodes(self, agent_a, agent_b, zone_range, datas):
         temp_agent_a = []

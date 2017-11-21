@@ -3,6 +3,7 @@ import sys
 import threading
 import time
 
+from PyQt5 import QtCore
 from Gui.NSV_Sync_Window import SimulatorUi
 from Util.RunProcess import run_process
 from Util.KillProcess import kill_process
@@ -13,8 +14,13 @@ from Util.Parser import string_parser
 from Util.PathMaker import make_path
 
 
-class Simulator:
+class Simulator(QtCore.QObject):
+
+    update_log = QtCore.pyqtSignal(str)
+
     def __init__(self):
+        super(Simulator, self).__init__()
+
         self.zone_range = 0
         self.node_info = {}
         self.log_manager = LogManager()
@@ -60,7 +66,7 @@ class Simulator:
             log = log.decode('utf-8')
             if idx is not 0:
                 self.log_manager.write_log(int(_node_number), log)
-                # TODO print log to ui
+                self.update_log.emit(log)
             else:
                 self.lock.acquire()
                 sock_object = make_socket_object(int(log))
@@ -82,7 +88,7 @@ class Simulator:
             self.stop_node()
             if self.log_manager.merge_log_files():
                 # TODO APPLICATION DO NOT FINISHED
-                sys.exit(0)
+                sys.exit(_app.exec_())
 
     def detect_event(self, _update_data):
         for node in _update_data:
@@ -174,3 +180,4 @@ class Simulator:
 
     def show(self, _dialog):
         self.window = SimulatorUi(_dialog)
+        self.update_log.connect(self.window.get_logs)
