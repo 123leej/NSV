@@ -29,6 +29,7 @@ def json_parser(_log_file):
     i = 0
     while True:
         line = _log_file.readline()
+        line = line.rstrip('\n')
 
         if not line:
             break
@@ -36,7 +37,7 @@ def json_parser(_log_file):
         line_list = line.split("|")
         temp_list = {}
         temp_list['Time'] = line_list[0]
-        temp_list['Command'] = line_list[1]
+        temp_list['Cmd'] = line_list[1]
         temp_list['From'] = line_list[2]
         temp_list['To'] = line_list[3]
         temp_list['Msg'] = line_list[4]
