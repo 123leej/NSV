@@ -1,10 +1,9 @@
 import sys
+import time
 from Gui.NSV_First_Dialog import NSVUi
 from Simulator import Simulator
 from Analyzer import Analyzer
 from PyQt5 import QtCore, QtWidgets
-import time
-
 
 PORT = 8000
 
@@ -38,8 +37,8 @@ if __name__ == "__main__":
                 break
             time.sleep(0.1)
 
-        simulator.show(dialog, algorithm_file_path, app)
-        simulator.run_algorithm(algorithm_file_path, number_of_node, zone_range)
+        simulator.show(dialog)
+        simulator.run_algorithm(algorithm_file_path, number_of_node, zone_range, app)
 
     if selected_menu(params['flag']) is "Performance_Analysis":
         result_data_path = params["file_path"]

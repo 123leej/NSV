@@ -13,7 +13,7 @@ class Node:
         # print("Node #", self.nodeNum, sep="")
 
         self.host = '127.0.0.1'
-        self.port = 20400 + self.nodeNum
+        self.port = 20900 + self.nodeNum
         print(self.port)
         while True:
             try:

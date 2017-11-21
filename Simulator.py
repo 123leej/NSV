@@ -10,7 +10,6 @@ from Util.LogManager import LogManager
 from Util.MakeSocket import make_socket_object
 from Util.SendSignal import send_signal
 from Util.Parser import string_parser
-from Exception.NSVExceptions import SimulationFinishException
 
 
 class Simulator:
@@ -33,7 +32,7 @@ class Simulator:
     def get_thread_is_running(self):
         return self.is_thread_run
 
-    def run_algorithm(self, _file, _node, _zone_range):
+    def run_algorithm(self, _file, _node, _zone_range, _app):
         self.zone_range = _zone_range
         for idx, data in enumerate(run_process(_file + " " + str(_node) + " " + str(_zone_range))):
             data = data.decode('utf-8')
@@ -47,6 +46,8 @@ class Simulator:
                 self.set_nodes_info(data, agent_a, agent_b)
                 self.detect_event(data)
                 self.window.draw_nodes(self.node_info["agent_a"], self.node_info["agent_b"], _zone_range, data)
+            if not self.window.get_runtime_flag():
+                self.stop_all_simulation(_file, _app)
 
     def stop_algorithm(self, _file):
         non_extension = os.path.splitext(_file)[0]
@@ -69,14 +70,14 @@ class Simulator:
     def stop_node(self):
         for node_number in self.node_info:
             if node_number != "agent_a" or node_number != "agent_b":
-
+                # TODO node can not receive END signal
                 send_signal(
                     self.node_info[node_number]["sock_obj"],
                     {"msg": "END"}
                 )
+        self.log_manager.save_logs()
 
     def stop_all_simulation(self, _file, _app):
-        print(1)
         if self.stop_algorithm(_file):
             self.stop_node()
             if self.log_manager.merge_log_files():
@@ -169,8 +170,5 @@ class Simulator:
         except KeyError:
             self.node_info[_node_num] = _info
 
-    def show(self, _dialog, _file, _app):
-        try:
-            self.window = SimulatorUi(_dialog)
-        except SimulationFinishException:
-            self.stop_all_simulation(_file, _app)
+    def show(self, _dialog):
+        self.window = SimulatorUi(_dialog)

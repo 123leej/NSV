@@ -12,6 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class SimulatorUi(object):
     def __init__(self, dialog):
+        self.running = True
         self.setup_ui(dialog)
         dialog.show()
 
@@ -119,4 +120,7 @@ class SimulatorUi(object):
             self.graphics_scene.addItem(c)
 
     def finish_simulation(self):
-        raise SimulationFinishException
+        self.running = False
+
+    def get_runtime_flag(self):
+        return self.running
