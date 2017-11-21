@@ -10,6 +10,7 @@ from Util.LogManager import LogManager
 from Util.MakeSocket import make_socket_object
 from Util.SendSignal import send_signal
 from Util.Parser import string_parser
+from Util.PathMaker import make_path
 
 
 class Simulator:
@@ -55,7 +56,7 @@ class Simulator:
         return kill_process(process_name)
 
     def run_node(self, _node_number):
-        for idx, log in enumerate(run_process("python3 NODE/Node.py "+str(_node_number))):
+        for idx, log in enumerate(run_process("python3 " + make_path(("NODE", "Node.py")) + " " + str(_node_number))):
             log = log.decode('utf-8')
             if idx is not 0:
                 self.log_manager.write_log(int(_node_number), log)
