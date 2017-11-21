@@ -69,8 +69,7 @@ class Simulator:
 
     def stop_node(self):
         for node_number in self.node_info:
-            if node_number != "agent_a" or node_number != "agent_b":
-                # TODO node can not receive END signal
+            if node_number != "agent_a" and node_number != "agent_b":
                 send_signal(
                     self.node_info[node_number]["sock_obj"],
                     {"msg": "END"}
