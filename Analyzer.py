@@ -104,7 +104,7 @@ class Analyzer:
                                 while(index + 1) < len(json_list):
                                     if json_list[index]['Cmd'] == "SET" and\
                                         json_list[index]['From'] == new_agent and\
-                                        json_list[index]['Msg'] == "Agent Update Node List.":
+                                        json_list[index]['Msg'] == "Agent Update Node List.":\
 
                                         tail_index = index
                                         print("handover start : " + str(head_index))

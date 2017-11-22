@@ -2,7 +2,6 @@ import os
 import time
 import datetime
 from Util.PathMaker import make_path
-from Exception.NSVExceptions import LogFileWriteError
 
 
 class LogManager:
@@ -22,7 +21,7 @@ class LogManager:
         try:
             self.log_file_buffer[_node_number].write(_log + "\n")
         except Exception:
-            raise LogFileWriteError('LogFileWriteError: "' + self.log_file[_node_number] + 'file can\'t open')
+            pass
 
     def save_logs(self):
         for i in range(0, len(self.log_file_buffer)):

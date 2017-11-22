@@ -13,7 +13,7 @@ class Node:
         # print("Node #", self.nodeNum, sep="")
 
         self.host = '127.0.0.1'
-        self.port = 20100 + self.nodeNum
+        self.port = 20000 + self.nodeNum
         print(self.port)
         while True:
             try:
@@ -72,7 +72,6 @@ class Node:
         sock_temp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock_temp.bind(('', 40000+self.nodeNum))
         sock_temp.listen(5)
-        self.print_log("DBG", self.nodeNum, "", str(40000+self.nodeNum))
         tgtSock, addr = sock_temp.accept()
         self.print_log("IN", nodeNum, self.nodeNum, "AGENT_SIDE.")
         rcvData = tgtSock.recv(1024)
@@ -107,7 +106,6 @@ class Node:
 
     def prev_agent(self):
         # print("Agent #", self.nodeNum, " Get Signal", sep="")
-        self.print_log("DBG", "NSV", self.nodeNum, "GET_REQ")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.bind(('', 40000+self.nodeNum))
         sock.listen(5)
@@ -128,16 +126,15 @@ class Node:
         self.print_log("SET", self.nodeNum, "", "Prev Agent Delete Node.")
 
     def node_in(self, nodeNum):
+        self.print_log("IN", self.nodeNum, nodeNum, "NODE_SIDE." + str(nodeNum))
         if self.recentAgent == nodeNum:
             # Node Just Re-Enter in Agent's Zone.
             self.agentInfo = [nodeNum, 20000+nodeNum]
             return
-        self.print_log("IN", self.nodeNum, nodeNum, "NODE_SIDE."+str(nodeNum))
         # nodeNum is new Agent's ID.
         while True:
             try:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.print_log("DBG", self.nodeNum, "", str(40000+nodeNum))
                 sock.connect((self.host, 40000+nodeNum))
                 break
             except Exception:

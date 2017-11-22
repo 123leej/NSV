@@ -33,7 +33,7 @@ class Simulator(QtCore.QObject):
 
         for node_number in range(0, int(_number_of_nodes)):
             self.log_manager.open_log_file(node_number)
-            t = threading.Thread(target=self.run_node, args=(str(node_number),))
+            t = threading.Thread(target=self.run_node, args=(str(node_number), ))
             t.start()
 
     def get_thread_is_running(self):
@@ -87,7 +87,6 @@ class Simulator(QtCore.QObject):
         if self.stop_algorithm(_file):
             self.stop_node()
             if self.log_manager.merge_log_files():
-                # TODO APPLICATION DO NOT FINISHED
                 sys.exit(_app.exec_())
 
     def detect_event(self, _update_data):
@@ -97,13 +96,15 @@ class Simulator(QtCore.QObject):
                 len_from_b = node[4]
 
                 if len_from_a > self.zone_range and len_from_b > self.zone_range:
-                    if self.node_info[node[0]]["recent_agent"] is not None:
+                    if self.node_info[node[0]]["agent"] is not None and self.node_info[node[0]]["agent"] is not "OUT":
+                        self.set_nodes(node[0], {"agent": None})
+
+                    if self.node_info[node[0]]["agent"] is None:
                         send_signal(
                             self.node_info[node[0]]["sock_obj"],
                             {"msg": "OUT"}
                         )
-
-                    self.set_nodes(node[0], {"agent": None})
+                        self.set_nodes(node[0], {"agent": "OUT"})
 
                 else:
                     if len_from_a > len_from_b:
@@ -159,14 +160,13 @@ class Simulator(QtCore.QObject):
 
                 else:
                     if len_from_a > len_from_b:
-                        self.set_nodes(node[0], {"agent": "B", "recent_agent": "B"})
+                        self.set_nodes(node[0], {"agent": None, "recent_agent": None})
 
                     if len_from_a <= len_from_b:
-                        self.set_nodes(node[0], {"agent": "A", "recent_agent": "A"})
+                        self.set_nodes(node[0], {"agent": None, "recent_agent": None})
                 send_signal(self.node_info[node[0]]["sock_obj"], {"msg": False})
             else:
                 send_signal(self.node_info[node[0]]["sock_obj"], {"msg": True})
-        print(self.node_info)
 
     def set_nodes(self, _node_num, _info, option=None):
         try:
