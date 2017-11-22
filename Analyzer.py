@@ -43,6 +43,7 @@ class Analyzer:
         head_index = 0
         tail_index = 0
         node_number = ""
+        non_sync_nodes = 0
 
         index = 0
         # (1) calculate node synchronization time
@@ -71,6 +72,8 @@ class Analyzer:
                             json_list[index]['From'] == node_number and\
                             json_list[index]['Msg'] == "NODE_SIDE.":
 
+                            print(json_list[index])
+
                             tail_index = index
                             sync_time = (datetime.datetime.strptime(json_list[tail_index]['Time'], "%H:%M:%S.%f") -
                                          datetime.datetime.strptime(json_list[head_index]['Time'], "%H:%M:%S.%f"))
@@ -78,9 +81,14 @@ class Analyzer:
 
                             sync_time_list.append(input_data)
                             index = head_index + 1
+
                             break
                         else:
                             index += 1
+                            tail_index = 0
+                    if tail_index == 0:
+                        index = head_index + 1
+                        non_sync_nodes += 1
             else:
                 index += 1
 
@@ -190,7 +198,7 @@ class Analyzer:
         '''
         # need to get number of nodes.
 
-        self.result_1 = self.make_chart_data(number_of_nodes, sync_time_list, 1)
+        self.result_1 = self.make_chart_data(number_of_nodes - non_sync_nodes, sync_time_list, 1)
         self.result_2 = self.make_chart_data(number_of_nodes, handover_time_list, 2)
 
         try:
