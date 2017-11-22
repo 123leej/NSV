@@ -1,6 +1,7 @@
 from sys import argv
 import socket
 import pickle
+import threading
 import time
 from datetime import datetime
 
@@ -11,7 +12,6 @@ class Node:
         script, nodeNum = argv
         self.nodeNum = int(nodeNum)
         # print("Node #", self.nodeNum, sep="")
-
         self.host = '127.0.0.1'
         self.port = 20000 + self.nodeNum
         print(self.port)
@@ -26,8 +26,10 @@ class Node:
         self.isAgent = self.get_type()
         self.recentAgent = None
         self.nodeList = []
+        self.requestQueue = []
         self.agentInfo = None
-        self.listen_request()
+        threading.Thread(target=self.listen_request).start()
+        self.do_request()
 
     def get_type(self):
         devType = pickle.loads(self.s.recv(1024))
@@ -36,24 +38,35 @@ class Node:
         return devType
 
     def listen_request(self):
-        # This part's code is need to fix later.
         while True:
             self.request = pickle.loads(self.s.recv(1024))
-            # self.request may contain request value: END, IN, OUT
-            # "IN" type structure: IN_[NODE_NUMBER]
             if self.request == "END":
                 self.s.close()
                 self.print_log("SET", self.nodeNum, "", "Node Destroyed.")
+                self.requestQueue.append(self.request)
+                break
+            self.requestQueue.append(self.request)
+
+    def do_request(self):
+        # This part's code is need to fix later.
+        while True:
+            while len(self.requestQueue) == 0:
+                pass
+            req = self.requestQueue[0]
+            del(self.requestQueue[0])
+            # req may contain request value: END, IN, OUT
+            # "IN" type structure: IN_[NODE_NUMBER]
+            if req == "END":
                 break
             if self.isAgent is True:
-                if self.request[:2] == "IN":
-                    self.agent_in(int(self.request[3:]))
+                if req[:2] == "IN":
+                    self.agent_in(int(req[3:]))
                 else:
                     # This is for Previous Agent
                     self.prev_agent()
             else:
-                if self.request[:2] == "IN":
-                    self.node_in(int(self.request[3:]))
+                if req[:2] == "IN":
+                    self.node_in(int(req[3:]))
                 else:
                     self.node_out()
 
@@ -83,7 +96,7 @@ class Node:
             tgtSock.close()
         else:
             # data structure: [ [prevAgentNum], [prevAgentPort] ]
-            prevAgentNum = data[0]
+            prevAgentNum = data
             tgtSock.close()
             while True:
                 try:
@@ -117,7 +130,7 @@ class Node:
         nodeIndex = 0
         for i in self.nodeList:
             if i[0] == nodeNum:
-                tgtSock.send(pickle.loads(i))
+                tgtSock.send(pickle.dumps(i))
                 break
             nodeIndex += 1
         tgtSock.close()
@@ -143,8 +156,13 @@ class Node:
             sock.send(pickle.dumps(self.recentAgent))
         else:
             sock.send(pickle.dumps("None"))
-            time.sleep(1)
-            sock.send(pickle.dumps([self.nodeNum, self.port]))
+            while True:
+                time.sleep(1)
+                try:
+                    sock.send(pickle.dumps([self.nodeNum, self.port]))
+                    break
+                except Exception:
+                    pass
         sock.close()
         self.recentAgent = nodeNum
         self.agentInfo = [nodeNum, 20000+nodeNum]
