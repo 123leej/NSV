@@ -135,14 +135,15 @@ class Node:
             nodeIndex += 1
         tgtSock.close()
         sock.close()
-        self.nodeList.remove(nodeIndex)
+        del(self.nodeList[nodeIndex])
         self.print_log("SET", self.nodeNum, "", "Prev Agent Delete Node.")
 
     def node_in(self, nodeNum):
-        self.print_log("IN", self.nodeNum, nodeNum, "NODE_SIDE." + str(nodeNum))
+        self.print_log("IN", self.nodeNum, nodeNum, "NODE_SIDE.")
         if self.recentAgent == nodeNum:
             # Node Just Re-Enter in Agent's Zone.
             self.agentInfo = [nodeNum, 20000+nodeNum]
+            self.print_log("SET", self.nodeNum, "", "Agent Update.")
             return
         # nodeNum is new Agent's ID.
         while True:

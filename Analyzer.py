@@ -127,7 +127,6 @@ class Analyzer:
             else:
                 index += 1
 
-        print(handover_time_list)
         log_data.close()
 
         # Making result chart process
@@ -144,8 +143,15 @@ class Analyzer:
         self.result_1 = self.make_chart_data(number_of_nodes, sync_time_list, 1)
         self.result_2 = self.make_chart_data(number_of_nodes, handover_time_list, 2)
 
-        self.average_data_1 = self.get_average_data("Fuck!!")
-        self.average_data_2 = self.get_average_data("You!!")
+        try:
+            self.average_data_1 = self.get_average_data(str(sum(sync_time_list) / len(sync_time_list)))
+        except ZeroDivisionError:
+            self.average_data_1 = "None"
+
+        try:
+            self.average_data_2 = self.get_average_data(str(sum(handover_time_list) / len(handover_time_list)))
+        except ZeroDivisionError:
+            self.average_data_2 = "None"
 
         return True
 
@@ -186,7 +192,6 @@ class Analyzer:
 
     def result_text(self):
         return [self.average_data_1 + self.get_log_to_string(), self.average_data_2 + self.get_log_to_string()]
-
 
     def start(self, dialog):
         self.window = AnalysisResultUi(dialog, self.result_1, self.result_2, self.result_text())
