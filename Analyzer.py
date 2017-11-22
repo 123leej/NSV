@@ -68,12 +68,13 @@ class Analyzer:
 
                     while (index + 1) < len(json_list):
                         if json_list[index]['Cmd'] == "IN" and\
-                            json_list[index]['From'] == node_number:
+                            json_list[index]['From'] == node_number and\
+                            json_list[index]['Msg'] == "NODE_SIDE.":
 
                             tail_index = index
                             sync_time = (datetime.datetime.strptime(json_list[tail_index]['Time'], "%H:%M:%S.%f") -
                                          datetime.datetime.strptime(json_list[head_index]['Time'], "%H:%M:%S.%f"))
-                            input_data = round(sync_time.microseconds * 0.000001, 3)
+                            input_data = float(sync_time.seconds) + round(sync_time.microseconds * 0.000001, 3)
 
                             sync_time_list.append(input_data)
                             index = head_index + 1
@@ -87,6 +88,52 @@ class Analyzer:
 
         index = 0
         # (2) calculate node's hand-over time
+        while index < len(json_list):
+            if json_list[index]['Cmd'] == "IN" and json_list[index]['From'] == "NSV":
+                # saves log index & node number who occurs zone_out event.
+                recent_agent = json_list[index]['To']
+                node_number = json_list[index]['Msg']
+
+                while (index + 1) < len(json_list):
+                    if json_list[index]['Cmd'] == "IN" and json_list[index]['From'] == "NSV" and \
+                        json_list[index]['To'] != recent_agent and json_list[index]['Msg'] == node_number:
+                        print(json_list[index])
+                        head_index = index
+                        new_agent = json_list[index]['To']
+
+                        while (index + 1) < len(json_list):
+                            if json_list[index]['Cmd'] == "RECV" and json_list[index]['To'] == new_agent:
+                                print(json_list[index])
+
+                                while (index + 1) < len(json_list):
+                                    if json_list[index]['Cmd'] == "SET" and\
+                                        json_list[index]['From'] == new_agent and\
+                                        json_list[index]['Msg'] == "Agent Update Node List.":
+
+                                        print(json_list[index])
+                                        tail_index = index
+                                        print("handover start : " + str(head_index))
+                                        print("handover end : " + str(tail_index))
+                                        sync_time = (datetime.datetime.strptime(json_list[tail_index]['Time'], "%H:%M:%S.%f") -
+                                                    datetime.datetime.strptime(json_list[head_index]['Time'], "%H:%M:%S.%f"))
+                                        input_data = float(sync_time.seconds) + round(sync_time.microseconds * 0.000001, 3)
+
+                                        print(input_data)
+                                        handover_time_list.append(input_data)
+                                        index = head_index + 1
+                                        break
+                                    else:
+                                        index += 1
+                                break
+                            else:
+                                index += 1
+                        break
+                    else:
+                        index += 1
+            else:
+                index += 1
+
+        '''
         while index < len(json_list):
             if json_list[index]['Cmd'] == "OUT":
                 # saves log index & node number who occurs zone_out event.
@@ -126,6 +173,9 @@ class Analyzer:
                         index += 1
             else:
                 index += 1
+        '''
+
+
 
         log_data.close()
 
@@ -163,20 +213,33 @@ class Analyzer:
         frame_width = 30 + 20 * _number_of_nodes + 10 * (_number_of_nodes - 1)
         frame_height = 200
 
-        chart = GroupedVerticalBarChart(
-            frame_width,
-            frame_height,
-            title="Simulation Result Anaylsis",
-            y_range=(0, 0.5)
-        )
-
-        chart.set_bar_width(20)
-        chart.set_colours(['ff0000'])
-        chart.set_axis_range('x', 1, _number_of_nodes - 2) # The -2 is two agent nodes.
-        chart.set_axis_range('y', 0, 0.5)
-        chart.add_data(_sync_time_list)
-        file_name = str(_num)+'.png'
-        chart.download(file_name)
+        if(_num == 1):
+            chart = GroupedVerticalBarChart(
+                frame_width,
+                frame_height,
+                title="Node Sync TIme",
+                y_range=(0, 10)
+            )
+            chart.set_bar_width(20)
+            chart.set_colours(['ff0000'])
+            chart.set_axis_range('x', 1, _number_of_nodes - 2) # The -2 is two agent nodes.
+            chart.set_axis_range('y', 0, 10)
+            chart.add_data(_sync_time_list)
+            file_name = str(_num)+'.png'
+            chart.download(file_name)
+        elif(_num == 2):
+            chart = GroupedVerticalBarChart(
+                frame_width,
+                frame_height,
+                title="Hand-over TIme",
+                y_range=(0, 1)
+            )
+            chart.set_bar_width(20)
+            chart.set_colours(['ff0000'])
+            chart.set_axis_range('y', 0, 1)
+            chart.add_data(_sync_time_list)
+            file_name = str(_num) + '.png'
+            chart.download(file_name)
 
         return file_name
 
