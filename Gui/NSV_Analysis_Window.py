@@ -21,6 +21,8 @@ class AnalysisResultUi(object):
     def setup_ui(self, form):
         form.setObjectName("Form")
         form.setFixedSize(574, 378)
+        self.palette = QtGui.QPalette()
+        self.palette.setColor(QtGui.QPalette.Window, QtCore.Qt.white)
 
         self.tabWidget = QtWidgets.QTabWidget(form)
         self.tabWidget.blockSignals(True)
@@ -34,8 +36,11 @@ class AnalysisResultUi(object):
 
         self.label = QtWidgets.QLabel(self.tab)
         self.label.setGeometry(QtCore.QRect(5, 4, 561, 231))
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setFrameShape(QtWidgets.QFrame.Box)
         self.label.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.label.setAutoFillBackground(True)
+        self.label.setPalette(self.palette)
         self.label.setObjectName("label")
 
         self.text_box = QtWidgets.QTextEdit(self.tab)
@@ -52,8 +57,11 @@ class AnalysisResultUi(object):
 
         self.label_3 = QtWidgets.QLabel(self.tab_2)
         self.label_3.setGeometry(QtCore.QRect(5, 4, 561, 231))
+        self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setFrameShape(QtWidgets.QFrame.Box)
         self.label_3.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.label_3.setAutoFillBackground(True)
+        self.label_3.setPalette(self.palette)
         self.label_3.setObjectName("label_3")
 
         self.text_box_2 = QtWidgets.QTextEdit(self.tab_2)
