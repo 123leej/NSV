@@ -230,7 +230,10 @@ class Analyzer:
             )
             chart.set_bar_width(20)
             chart.set_colours(['ff0000'])
+
+            # Setting x-axis range
             chart.set_axis_range('x', 1, _number_of_nodes - 2) # The -2 is two agent nodes.
+
             chart.set_axis_range('y', 0, 10)
             chart.add_data(_sync_time_list)
             file_name = str(_num)+'.png'
