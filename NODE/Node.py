@@ -18,6 +18,7 @@ class Node:
         while True:
             try:
                 self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                 self.s.connect((self.host, self.port))
                 break
             except Exception:
@@ -39,13 +40,13 @@ class Node:
 
     def listen_request(self):
         while True:
-            self.request = pickle.loads(self.s.recv(1024))
-            if self.request == "END":
+            temp = pickle.loads(self.s.recv(1024))
+            if temp == "END":
                 self.s.close()
                 self.print_log("SET", self.nodeNum, "", "Node Destroyed.")
-                self.requestQueue.append(self.request)
+                self.requestQueue.append(temp)
                 break
-            self.requestQueue.append(self.request)
+            self.requestQueue.append(temp)
 
     def do_request(self):
         # This part's code is need to fix later.
@@ -79,11 +80,12 @@ class Node:
                     nodeInList = True
                     break
             if nodeInList is True:
-                # Node Just Re-Enter in Agent's Zone.
+                self.print_log("IN", nodeNum, self.nodeNum, "NODE #" + str(nodeNum) + "info is already in Agent.")
                 return
         self.print_log("IN", "NSV", self.nodeNum, str(nodeNum))
         sock_temp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock_temp.bind(('', 40000+self.nodeNum))
+        sock_temp.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock_temp.bind(('', 40000 + (self.nodeNum*100) + nodeNum))
         sock_temp.listen(5)
         tgtSock, addr = sock_temp.accept()
         self.print_log("IN", nodeNum, self.nodeNum, "AGENT_SIDE.")
@@ -95,13 +97,13 @@ class Node:
             # data structure: [ [newNodeNum], [newNodePort] ]
             tgtSock.close()
         else:
-            # data structure: [ [prevAgentNum], [prevAgentPort] ]
+            # data structure: prevAgentNum
             prevAgentNum = data
             tgtSock.close()
             while True:
                 try:
                     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    sock.connect((self.host, 40000+prevAgentNum))
+                    sock.connect((self.host, 50000+prevAgentNum))
                     break
                 except Exception:
                     pass
@@ -120,22 +122,22 @@ class Node:
     def prev_agent(self):
         # print("Agent #", self.nodeNum, " Get Signal", sep="")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.bind(('', 40000+self.nodeNum))
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.bind(('', 50000+self.nodeNum))
         sock.listen(5)
         tgtSock, addr = sock.accept()
         rcvData = tgtSock.recv(1024)
         nodeNum = pickle.loads(rcvData)
         self.print_log("GET_REQ", "NSV", self.nodeNum,
             "Request Node #"+str(nodeNum)+" info.")
-        nodeIndex = 0
+
         for i in self.nodeList:
             if i[0] == nodeNum:
                 tgtSock.send(pickle.dumps(i))
+                self.nodeList.remove(i)
                 break
-            nodeIndex += 1
         tgtSock.close()
         sock.close()
-        del(self.nodeList[nodeIndex])
         self.print_log("SET", self.nodeNum, "", "Prev Agent Delete Node.")
 
     def node_in(self, nodeNum):
@@ -149,7 +151,7 @@ class Node:
         while True:
             try:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.connect((self.host, 40000+nodeNum))
+                sock.connect((self.host, 40000 + (nodeNum*100) + self.nodeNum))
                 break
             except Exception:
                 pass
@@ -174,7 +176,7 @@ class Node:
         self.agentInfo = None
 
     def print_log(self, cmd, dataFrom, dataTo, details):
-        now = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+        now = datetime.now().strftime("%H:%M:%S.%f")
         print(now, cmd, dataFrom, dataTo, details, sep="|")
 
 
