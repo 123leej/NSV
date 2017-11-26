@@ -17,22 +17,16 @@ class Analyzer:
         self.result_2 = ""
 
     def make_result_data(self):
-        marker_1 = []
-        marker_2 = []
-        agent_node = []
-        number_of_nodes = 0
-
         with open(self.log_file, 'r') as f:
             json_list = json_parser(f)
-        # start
+
         agent_node = self.get_agent_nodes(json_list)
         number_of_nodes = self.get_number_of_nodes(json_list)
 
+        marker_1, sync_time_list = self.get_sync_time(json_list, agent_node, number_of_nodes)
         marker_2, handover_time_list = self.get_handover_time(json_list, agent_node)
 
-        marker_1, sync_time_list = self.get_sync_time(json_list, agent_node, number_of_nodes)
-
-        self.result_1 = self.make_chart_data(number_of_nodes - non_sync_nodes, sync_time_list, marker_1, 1)
+        self.result_1 = self.make_chart_data(number_of_nodes, sync_time_list, marker_1, 1)
         self.result_2 = self.make_chart_data(number_of_nodes, handover_time_list, marker_2, 2)
 
         try:
@@ -55,17 +49,18 @@ class Analyzer:
             if i in agent_node:
                 continue
             for json in json_list:
-                if self.find_keyword_from_log({"From": str(i)}, json):
-                    if self.find_keyword_from_log({"Cmd": "IN"}, json):
-                        head_time = datetime.datetime.strptime(json["Time"], "%H:%M:%S.%f")
-                    elif self.find_keyword_from_log({"Msg": "Agent Update."}, json):
-                        tail_time = datetime.datetime.strptime(json["Time"], "%H:%M:%S.%f")
+                if self.find_keyword_from_log({"From": str(i)}, json_list[json]):
+                    if self.find_keyword_from_log({"Cmd": "IN"}, json_list[json]):
+                        head_time = datetime.datetime.strptime(json_list[json]["Time"], "%H:%M:%S.%f")
+                    elif self.find_keyword_from_log({"Msg": "Agent Update."}, json_list[json]):
+                        tail_time = datetime.datetime.strptime(json_list[json]["Time"], "%H:%M:%S.%f")
                         tmp_sync_time = tail_time - head_time
                         sync_time = float(tmp_sync_time.seconds) + round(tmp_sync_time.microseconds * 0.000001, 3)
                         marker_1.append("Node " + str(i))
                         sync_time_list.append(sync_time)
                         break
-        return [marker_1, sync_time_list]
+
+        return marker_1, sync_time_list
 
     # keyword = {"msg" : key} (dict)  type - 'Time''Cmd''From''To''Msg'
     def find_keyword_from_log(self, keyword, log):
@@ -81,7 +76,7 @@ class Analyzer:
     def get_number_of_nodes(self, json_list):
         result = 0
         for json in json_list:
-            if self.find_keyword_from_log({"Msg": "Node Created."}, json):
+            if self.find_keyword_from_log({"Msg": "Node Created."}, json_list[json]):
                 result += 1
         return result
 
@@ -89,8 +84,8 @@ class Analyzer:
         result = []
         temp = 0
         for json in json_list:
-            if self.find_keyword_from_log({"Msg": "This Node is Agent."}, json):
-                result.append(json["From"])
+            if self.find_keyword_from_log({"Msg": "This Node is Agent."}, json_list[json]):
+                result.append(json_list[json]["From"])
                 temp += 1
             if temp == 2:
                 break
@@ -111,48 +106,48 @@ class Analyzer:
                         "Cmd": "IN",
                         "Msg": "AGENT_SIDE."
                     },
-                    json
+                    json_list[json]
             ):
-                in_event_buffer.append([json["From"], json["To"]])
+                in_event_buffer.append([json_list[json]["From"], json_list[json]["To"]])
 
         # filter only hand_over start event
         for in_event in in_event_buffer:
-            for idx, json in enumerate(json_list):
+            for json in json_list:
                 if self.find_keyword_from_log(
                         {
                             "Cmd": "GET_REQ",
                             "To": agent[not in_event[1]],
                             "Msg": "Request Node #" + in_event[0] + " info."
                         },
-                        json
+                        json_list[json]
                 ):
-                    hand_over_start_data.append(json)
-                    json_list.pop(idx)
+                    hand_over_start_data.append(json_list[json])
+                    json_list.pop(json)
                     hand_over_buffer.append(in_event)
                     break
 
         # filter end event match with start event
         for hand_over in hand_over_buffer:
-            for idx, json in enumerate(json_list):
+            for json in json_list:
                 if self.find_keyword_from_log(
                         {
                             "Cmd": "SET",
                             "From": agent[not hand_over[1]],
                             "Msg": "Prev Agent Delete Node."
                         },
-                        json
+                        json_list[json]
                 ):
-                    hand_over_end_data.append(json)
-                    json_list.pop(idx)
+                    hand_over_end_data.append(json_list[json])
+                    json_list.pop(json)
                     break
 
         for i in range(0, len(hand_over_buffer)):
             temp = datetime.datetime.strptime(hand_over_end_data[i]['Time'], "%H:%M:%S.%f") - \
-                   datetime.datetime.strptime(hand_over_start_data[i]['Time'], "%H:%M%S.%f")
+                   datetime.datetime.strptime(hand_over_start_data[i]['Time'], "%H:%M:%S.%f")
             hand_over_time.append(float(temp.seconds) + round(temp.microseconds * 0.000001, 3))
             marker.append(
                 "Node " + str(hand_over_buffer[i][0]) + " moved " +
-                str(hand_over_end_data[i]["From"]) + " to " + str(hand_over_buffer[i][1]))
+                str(hand_over_end_data[i]["From"]) + " to " + str(agent[not hand_over_buffer[i][1]]))
 
         return marker, hand_over_time
 
@@ -163,21 +158,18 @@ class Analyzer:
     def make_chart_data(self, _number_of_nodes, _sync_time_list, _marker, _num):
         frame_width = 20 * (_number_of_nodes - 2) + 100
         frame_height = 215
-        try:
-            range = int(max(_sync_time_list)) + 1
-        except ValueError:
-            range = 2
+
         if _num == 1:
             chart = GroupedVerticalBarChart(
                 frame_width,
                 frame_height,
-                y_range=(0, range),
-                x_range=(20, 20),
+                y_range=(0, 0.3),
+                x_range=(0, 20),
                 colours=['ff0000', 'ff4000', 'ff8000', 'ffbf00', 'ffff00', 'bfff00', '80ff00', '40ff00', '00ff00',
                          '00ff40', '00ff80', '00ffbf', '00ffff', '00bfff', '0080ff', '0040ff', '0000ff', '4000ff',
                          '8000ff', 'bf00ff', 'ff00ff', 'ff00bf', 'ff0080', 'ff0040']
             )
-            chart.set_axis_range('y', 0, 2)
+            chart.set_axis_range('y', 0, 0.3)
             chart.set_axis_labels('y', ("", "sec"))
             chart.set_bar_width(10)
             chart.set_legend(_marker)
@@ -189,13 +181,13 @@ class Analyzer:
             chart = GroupedVerticalBarChart(
                 frame_width,
                 frame_height,
-                y_range=(0, range),
-                x_range=(20, 20),
+                y_range=(0, 0.5),
+                x_range=(0, 20),
                 colours=['ff0000', 'ff4000', 'ff8000', 'ffbf00', 'ffff00', 'bfff00', '80ff00', '40ff00', '00ff00',
                          '00ff40', '00ff80', '00ffbf', '00ffff', '00bfff', '0080ff', '0040ff', '0000ff', '4000ff',
                          '8000ff', 'bf00ff', 'ff00ff', 'ff00bf', 'ff0080', 'ff0040']
             )
-            chart.set_axis_range('y', 0, 2)
+            chart.set_axis_range('y', 0, 0.5)
             chart.set_axis_labels('y', ("", "sec"))
             chart.set_bar_width(10)
             chart.set_legend(_marker)

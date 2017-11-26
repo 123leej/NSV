@@ -114,7 +114,7 @@ class Simulator(QtCore.QObject):
                                     self.node_info[self.node_info["agent_a"]]["sock_obj"],
                                     {"msg": "REQ"}
                                 )
-
+                                print(1)
                             send_signal(
                                 self.node_info[self.node_info["agent_b"]]["sock_obj"],
                                 {"node_num": node[0], "msg": "IN"}
@@ -132,7 +132,7 @@ class Simulator(QtCore.QObject):
                                     self.node_info[self.node_info["agent_b"]]["sock_obj"],
                                     {"msg": "REQ"}
                                 )
-
+                                print(1)
                             send_signal(
                                 self.node_info[self.node_info["agent_a"]]["sock_obj"],
                                 {"node_num": node[0], "msg": "IN"}

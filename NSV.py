@@ -43,6 +43,6 @@ if __name__ == "__main__":
     if selected_menu(params['flag']) is "Performance_Analysis":
         result_data_path = params["file_path"]
         analyzer = Analyzer(result_data_path)
-        if analyzer.show_result_data():
+        if analyzer.make_result_data():
             analyzer.start(dialog)
             app.exec_()

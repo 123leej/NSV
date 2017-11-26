@@ -121,6 +121,7 @@ class Node:
         self.print_log("SET", self.nodeNum, "", "Agent Update Node List.:"+str(nodeNum))
 
     def prev_agent(self):
+        self.print_log("DBG", "REQ", "", "Ev")
         # print("Agent #", self.nodeNum, " Get Signal", sep="")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
