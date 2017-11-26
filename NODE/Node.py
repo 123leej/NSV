@@ -160,7 +160,6 @@ class Node:
         else:
             sock.send(pickle.dumps("None"))
             while True:
-                time.sleep(1)
                 try:
                     sock.send(pickle.dumps([self.nodeNum, self.port]))
                     break
