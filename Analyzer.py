@@ -28,6 +28,8 @@ class Analyzer:
         agent_node = self.get_agent_nodes(json_list)
         number_of_nodes = self.get_number_of_nodes(json_list)
 
+        marker_1, sync_time_list = self.get_sync_time(json_list, agent_node, number_of_nodes)
+
         
         self.result_1 = self.make_chart_data(number_of_nodes - non_sync_nodes, sync_time_list, marker_1, 1)
         self.result_2 = self.make_chart_data(number_of_nodes, handover_time_list, marker_2, 2)
@@ -43,6 +45,26 @@ class Analyzer:
             self.average_data_2 = "None\n\n"
 
         return True
+
+    def get_sync_time(self, json_list, agent_node, number_of_nodes):
+        marker_1 = []
+        sync_time_list = []
+        head_time = 0
+        for i in range(0, number_of_nodes):
+            if i in agent_node:
+                continue
+            for json in json_list:
+                if self.find_keyword_from_log({"From": str(i)}, json):
+                    if self.find_keyword_from_log({"Cmd": "IN"}, json):
+                        head_time = datetime.datetime.strptime(json["Time"], "%H:%M:%S.%f")
+                    elif self.find_keyword_from_log({"Msg": "Agent Update."}, json):
+                        tail_time = datetime.datetime.strptime(json["Time"], "%H:%M:%S.%f")
+                        tmp_sync_time = tail_time - head_time
+                        sync_time = float(tmp_sync_time.seconds) + round(tmp_sync_time.microseconds * 0.000001, 3)
+                        marker_1.append("Node " + str(i))
+                        sync_time_list.append(sync_time)
+                        break
+        return [marker_1, sync_time_list]
 
     # keyword = {"msg" : key} (dict)  type - 'Time''Cmd''From''To''Msg'
     def find_keyword_from_log(self, keyword, log):
