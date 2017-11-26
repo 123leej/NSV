@@ -92,6 +92,7 @@ class Node:
         rcvData = tgtSock.recv(1024)
         data = pickle.loads(rcvData)
         if data == "None":
+            tgtSock.send(pickle.dumps("OK"))
             rcvData = tgtSock.recv(1024)
             data = pickle.loads(rcvData)
             # data structure: [ [newNodeNum], [newNodePort] ]
@@ -159,12 +160,8 @@ class Node:
             sock.send(pickle.dumps(self.recentAgent))
         else:
             sock.send(pickle.dumps("None"))
-            while True:
-                try:
-                    sock.send(pickle.dumps([self.nodeNum, self.port]))
-                    break
-                except Exception:
-                    pass
+            sock.recv(1024)
+            sock.send(pickle.dumps([self.nodeNum, self.port]))
         sock.close()
         self.recentAgent = nodeNum
         self.agentInfo = [nodeNum, 20000+nodeNum]
