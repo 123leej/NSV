@@ -118,7 +118,7 @@ class Node:
             # data structure: [ [newNodeNum], [newNodePort] ]
             sock.close()
         self.nodeList.append(data)
-        self.print_log("SET", self.nodeNum, "", "Agent Update Node List.")
+        self.print_log("SET", self.nodeNum, "", "Agent Update Node List.:"+str(nodeNum))
 
     def prev_agent(self):
         # print("Agent #", self.nodeNum, " Get Signal", sep="")
