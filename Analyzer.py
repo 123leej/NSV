@@ -25,7 +25,10 @@ class Analyzer:
         with open(self.log_file, 'r') as f:
             json_list = json_parser(f)
         # start
+        agent_node = self.get_agent_nodes(json_list)
+        number_of_nodes = self.get_number_of_nodes(json_list)
 
+        
         self.result_1 = self.make_chart_data(number_of_nodes - non_sync_nodes, sync_time_list, marker_1, 1)
         self.result_2 = self.make_chart_data(number_of_nodes, handover_time_list, marker_2, 2)
 
@@ -51,6 +54,24 @@ class Analyzer:
                 flag = False
                 break
         return flag
+
+    def get_number_of_nodes(self, json_list):
+        result = 0
+        for json in json_list:
+            if self.find_keyword_from_log({"Msg": "Node Created."}, json):
+                result += 1
+        return result
+
+    def get_agent_nodes(self, json_list):
+        result = []
+        temp = 0
+        for json in json_list:
+            if self.find_keyword_from_log({"Msg": "This Node is Agent."}, json):
+                result.append(json["From"])
+                temp += 1
+            if temp == 2:
+                break
+        return result
 
     def get_average_data(self, _msg):
         data = "Average Data: " + _msg + " seconds. \n\n"
