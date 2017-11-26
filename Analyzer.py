@@ -16,7 +16,15 @@ class Analyzer:
         self.result_1 = ""
         self.result_2 = ""
 
+    def make_result_data(self):
+        marker_1 = []
+        marker_2 = []
+        agent_node = []
+        number_of_nodes = 0
 
+        with open(self.log_file, 'r') as f:
+            json_list = json_parser(f)
+        #start
 
         self.result_1 = self.make_chart_data(number_of_nodes - non_sync_nodes, sync_time_list, marker_1, 1)
         self.result_2 = self.make_chart_data(number_of_nodes, handover_time_list, marker_2, 2)
@@ -32,6 +40,8 @@ class Analyzer:
             self.average_data_2 = "None\n\n"
 
         return True
+
+    def find
 
     def get_average_data(self, _msg):
         data = "Average Data: " + _msg + " seconds. \n\n"
