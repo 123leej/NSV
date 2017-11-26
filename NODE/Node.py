@@ -14,6 +14,7 @@ class Node:
         # print("Node #", self.nodeNum, sep="")
         self.host = '127.0.0.1'
         self.port = 20000 + self.nodeNum
+        self.ho_port = 50000
         print(self.port)
         while True:
             try:
@@ -86,7 +87,7 @@ class Node:
         sock_temp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock_temp.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         sock_temp.bind(('', 40000 + (self.nodeNum*100) + nodeNum))
-        sock_temp.listen(5)
+        sock_temp.listen()
         tgtSock, addr = sock_temp.accept()
         self.print_log("IN", nodeNum, self.nodeNum, "AGENT_SIDE.")
         rcvData = tgtSock.recv(1024)
@@ -101,13 +102,14 @@ class Node:
             # data structure: prevAgentNum
             prevAgentNum = data
             tgtSock.close()
+            self.ho_port += 1
             while True:
                 try:
                     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    sock.connect((self.host, 50000+prevAgentNum))
+                    sock.connect((self.host, self.ho_port))
                     break
-                except Exception:
-                    pass
+                except Exception as e:
+                    self.print_log("DBG", "", "", e)
             sock.send(pickle.dumps(nodeNum))
             self.print_log("SEND", self.nodeNum, prevAgentNum,
                 "Request Node's Info to Prev Agent.")
@@ -121,20 +123,19 @@ class Node:
         self.print_log("SET", self.nodeNum, "", "Agent Update Node List.:"+str(nodeNum))
 
     def prev_agent(self):
-        self.print_log("DBG", "REQ", "", "Ev")
-        # print("Agent #", self.nodeNum, " Get Signal", sep="")
+        self.ho_port += 1
+        self.print_log("GET_REQ", "NSV", self.nodeNum,
+            "Request Node info.")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        sock.bind(('', 50000+self.nodeNum))
-        sock.listen(5)
+        sock.bind(('', self.ho_port))
+        sock.listen()
         tgtSock, addr = sock.accept()
         rcvData = tgtSock.recv(1024)
-        nodeNum = pickle.loads(rcvData)
-        self.print_log("GET_REQ", "NSV", self.nodeNum,
-            "Request Node #"+str(nodeNum)+" info.")
-
+        node_info = pickle.loads(rcvData)
+        self.print_log("SEND", self.nodeNum, "", "Send Node #" + str(node_info) + " info.")
         for i in self.nodeList:
-            if i[0] == nodeNum:
+            if i[0] == node_info:
                 tgtSock.send(pickle.dumps(i))
                 self.nodeList.remove(i)
                 break

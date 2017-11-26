@@ -29,7 +29,7 @@ if __name__ == "__main__":
         algorithm_file_path = params["file_path"]
         number_of_node = params["number_of_nodes"]
         zone_range = params["zone_range"]
-        #number_of_node = 3
+
         simulator = Simulator()
         simulator.make_node_threads(number_of_node)
         while True:

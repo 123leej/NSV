@@ -113,11 +113,15 @@ class Analyzer:
         # filter only hand_over start event
         for in_event in in_event_buffer:
             for json in json_list:
+                if agent.index(in_event[1]) is 0:
+                    temp = 1
+                if agent.index(in_event[1]) is 1:
+                    temp = 0
                 if self.find_keyword_from_log(
                         {
                             "Cmd": "GET_REQ",
-                            "To": agent[not in_event[1]],
-                            "Msg": "Request Node #" + in_event[0] + " info."
+                            "To": agent[temp],
+                            "Msg": "Request Node info."
                         },
                         json_list[json]
                 ):
@@ -129,10 +133,14 @@ class Analyzer:
         # filter end event match with start event
         for hand_over in hand_over_buffer:
             for json in json_list:
+                if agent.index(hand_over[1]) is 0:
+                    temp = 1
+                if agent.index(hand_over[1]) is 1:
+                    temp = 0
                 if self.find_keyword_from_log(
                         {
                             "Cmd": "SET",
-                            "From": agent[not hand_over[1]],
+                            "From": agent[temp],
                             "Msg": "Prev Agent Delete Node."
                         },
                         json_list[json]
@@ -145,9 +153,13 @@ class Analyzer:
             temp = datetime.datetime.strptime(hand_over_end_data[i]['Time'], "%H:%M:%S.%f") - \
                    datetime.datetime.strptime(hand_over_start_data[i]['Time'], "%H:%M:%S.%f")
             hand_over_time.append(float(temp.seconds) + round(temp.microseconds * 0.000001, 3))
+            if agent.index(hand_over_end_data[i]["From"]) is 0:
+                temp = 1
+            if agent.index(hand_over_end_data[i]["From"]) is 1:
+                temp = 0
             marker.append(
                 "Node " + str(hand_over_buffer[i][0]) + " moved " +
-                str(hand_over_end_data[i]["From"]) + " to " + str(agent[not hand_over_buffer[i][1]]))
+                str(hand_over_end_data[i]["From"]) + " to " + str(agent[temp]))
 
         return marker, hand_over_time
 
@@ -181,13 +193,13 @@ class Analyzer:
             chart = GroupedVerticalBarChart(
                 frame_width,
                 frame_height,
-                y_range=(0, 0.5),
+                y_range=(0, 0.1),
                 x_range=(0, 20),
                 colours=['ff0000', 'ff4000', 'ff8000', 'ffbf00', 'ffff00', 'bfff00', '80ff00', '40ff00', '00ff00',
                          '00ff40', '00ff80', '00ffbf', '00ffff', '00bfff', '0080ff', '0040ff', '0000ff', '4000ff',
                          '8000ff', 'bf00ff', 'ff00ff', 'ff00bf', 'ff0080', 'ff0040']
             )
-            chart.set_axis_range('y', 0, 0.5)
+            chart.set_axis_range('y', 0, 0.1)
             chart.set_axis_labels('y', ("", "sec"))
             chart.set_bar_width(10)
             chart.set_legend(_marker)
