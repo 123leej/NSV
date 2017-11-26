@@ -24,7 +24,7 @@ class Analyzer:
 
         with open(self.log_file, 'r') as f:
             json_list = json_parser(f)
-        #start
+        # start
 
         self.result_1 = self.make_chart_data(number_of_nodes - non_sync_nodes, sync_time_list, marker_1, 1)
         self.result_2 = self.make_chart_data(number_of_nodes, handover_time_list, marker_2, 2)
@@ -41,7 +41,16 @@ class Analyzer:
 
         return True
 
-    def find
+    # keyword = {"msg" : key} (dict)  type - 'Time''Cmd''From''To''Msg'
+    def find_keyword_from_log(self, keyword, log):
+        flag = True
+        for key in keyword:
+            if log[key] == keyword[key]:
+                pass
+            else:
+                flag = False
+                break
+        return flag
 
     def get_average_data(self, _msg):
         data = "Average Data: " + _msg + " seconds. \n\n"
@@ -69,7 +78,7 @@ class Analyzer:
             chart.set_bar_width(10)
             chart.set_legend(_marker)
             chart.add_data(_sync_time_list)
-            file_name = str(_num)+'.png'
+            file_name = str(_num) + '.png'
             chart.download(file_name)
 
         elif _num == 2:
