@@ -28,9 +28,10 @@ class Analyzer:
         agent_node = self.get_agent_nodes(json_list)
         number_of_nodes = self.get_number_of_nodes(json_list)
 
+        marker_2, handover_time_list = self.get_handover_time(json_list, agent_node)
+
         marker_1, sync_time_list = self.get_sync_time(json_list, agent_node, number_of_nodes)
 
-        
         self.result_1 = self.make_chart_data(number_of_nodes - non_sync_nodes, sync_time_list, marker_1, 1)
         self.result_2 = self.make_chart_data(number_of_nodes, handover_time_list, marker_2, 2)
 
@@ -94,6 +95,66 @@ class Analyzer:
             if temp == 2:
                 break
         return result
+
+    def get_handover_time(self, json_list, agent):
+        hand_over_time = []
+        marker = []
+        in_event_buffer = []
+        hand_over_buffer = []
+        hand_over_start_data = []
+        hand_over_end_data = []
+
+        # get all in event
+        for json in json_list:
+            if self.find_keyword_from_log(
+                    {
+                        "Cmd": "IN",
+                        "Msg": "AGENT_SIDE."
+                    },
+                    json
+            ):
+                in_event_buffer.append([json["From"], json["To"]])
+
+        # filter only hand_over start event
+        for in_event in in_event_buffer:
+            for idx, json in enumerate(json_list):
+                if self.find_keyword_from_log(
+                        {
+                            "Cmd": "GET_REQ",
+                            "To": agent[not in_event[1]],
+                            "Msg": "Request Node #" + in_event[0] + " info."
+                        },
+                        json
+                ):
+                    hand_over_start_data.append(json)
+                    json_list.pop(idx)
+                    hand_over_buffer.append(in_event)
+                    break
+
+        # filter end event match with start event
+        for hand_over in hand_over_buffer:
+            for idx, json in enumerate(json_list):
+                if self.find_keyword_from_log(
+                        {
+                            "Cmd": "SET",
+                            "From": agent[not hand_over[1]],
+                            "Msg": "Prev Agent Delete Node."
+                        },
+                        json
+                ):
+                    hand_over_end_data.append(json)
+                    json_list.pop(idx)
+                    break
+
+        for i in range(0, len(hand_over_buffer)):
+            temp = datetime.datetime.strptime(hand_over_end_data[i]['Time'], "%H:%M:%S.%f") - \
+                   datetime.datetime.strptime(hand_over_start_data[i]['Time'], "%H:%M%S.%f")
+            hand_over_time.append(float(temp.seconds) + round(temp.microseconds * 0.000001, 3))
+            marker.append(
+                "Node " + str(hand_over_buffer[i][0]) + " moved " +
+                str(hand_over_end_data[i]["From"]) + " to " + str(hand_over_buffer[i][1]))
+
+        return marker, hand_over_time
 
     def get_average_data(self, _msg):
         data = "Average Data: " + _msg + " seconds. \n\n"
