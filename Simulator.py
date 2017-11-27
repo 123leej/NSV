@@ -112,7 +112,7 @@ class Simulator(QtCore.QObject):
                             if self.node_info[node[0]]["recent_agent"] is "A":
                                 send_signal(
                                     self.node_info[self.node_info["agent_a"]]["sock_obj"],
-                                    {"msg": "REQ"}
+                                    {"node_num": node[0], "msg": "REQ"}
                                 )
                                 print("a-b")
 
@@ -131,9 +131,10 @@ class Simulator(QtCore.QObject):
                             if self.node_info[node[0]]["recent_agent"] is "B":
                                 send_signal(
                                     self.node_info[self.node_info["agent_b"]]["sock_obj"],
-                                    {"msg": "REQ"}
+                                    {"node_num": node[0], "msg": "REQ"}
                                 )
                                 print("b-a")
+
                             send_signal(
                                 self.node_info[self.node_info["agent_a"]]["sock_obj"],
                                 {"node_num": node[0], "msg": "IN"}

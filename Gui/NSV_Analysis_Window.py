@@ -20,7 +20,7 @@ class AnalysisResultUi(object):
 
     def setup_ui(self, form):
         form.setObjectName("Form")
-        form.setFixedSize(574, 378)
+        form.setFixedSize(574, 428)
         self.palette = QtGui.QPalette()
         self.palette.setColor(QtGui.QPalette.Window, QtCore.Qt.white)
 
@@ -28,15 +28,15 @@ class AnalysisResultUi(object):
         self.tabWidget.blockSignals(True)
         self.tabWidget.setCurrentIndex(0)
         self.tabWidget.currentChanged.connect(self.tab_event)
-        self.tabWidget.setGeometry(QtCore.QRect(-2, -1, 581, 381))
+        self.tabWidget.setGeometry(QtCore.QRect(-2, -1, 581, 431))
         self.tabWidget.setObjectName("tabWidget")
 
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
 
         self.label = QtWidgets.QLabel(self.tab)
-        self.label.setGeometry(QtCore.QRect(5, 4, 561, 231))
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setGeometry(QtCore.QRect(5, 4, 561, 281))
+        self.label.setAlignment(QtCore.Qt.AlignRight)
         self.label.setFrameShape(QtWidgets.QFrame.Box)
         self.label.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.label.setAutoFillBackground(True)
@@ -44,7 +44,7 @@ class AnalysisResultUi(object):
         self.label.setObjectName("label")
 
         self.text_box = QtWidgets.QTextEdit(self.tab)
-        self.text_box.setGeometry(QtCore.QRect(5, 244, 561, 101))
+        self.text_box.setGeometry(QtCore.QRect(5, 294, 561, 101))
         self.text_box.setFrameShape(QtWidgets.QFrame.Box)
         self.text_box.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.text_box.ensureCursorVisible()
@@ -56,8 +56,8 @@ class AnalysisResultUi(object):
         self.tab_2.setObjectName("tab_2")
 
         self.label_3 = QtWidgets.QLabel(self.tab_2)
-        self.label_3.setGeometry(QtCore.QRect(5, 4, 561, 231))
-        self.label_3.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_3.setGeometry(QtCore.QRect(5, 4, 561, 281))
+        self.label_3.setAlignment(QtCore.Qt.AlignRight)
         self.label_3.setFrameShape(QtWidgets.QFrame.Box)
         self.label_3.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.label_3.setAutoFillBackground(True)
@@ -65,7 +65,7 @@ class AnalysisResultUi(object):
         self.label_3.setObjectName("label_3")
 
         self.text_box_2 = QtWidgets.QTextEdit(self.tab_2)
-        self.text_box_2.setGeometry(QtCore.QRect(5, 244, 561, 101))
+        self.text_box_2.setGeometry(QtCore.QRect(5, 294, 561, 101))
         self.text_box_2.setFrameShape(QtWidgets.QFrame.Box)
         self.text_box_2.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.text_box_2.ensureCursorVisible()

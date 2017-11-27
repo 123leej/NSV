@@ -2,7 +2,6 @@ from sys import argv
 import socket
 import pickle
 import threading
-import time
 from datetime import datetime
 
 
@@ -14,7 +13,7 @@ class Node:
         # print("Node #", self.nodeNum, sep="")
         self.host = '127.0.0.1'
         self.port = 20000 + self.nodeNum
-        self.ho_port = 50000
+        self.hand_over_sequence_number = 0
         print(self.port)
         while True:
             try:
@@ -35,6 +34,7 @@ class Node:
 
     def get_type(self):
         devType = pickle.loads(self.s.recv(1024))
+        self.s.send(pickle.dumps("ok"))
         if devType is True:
             self.print_log("SET", self.nodeNum, "", "This Node is Agent.")
         return devType
@@ -42,6 +42,7 @@ class Node:
     def listen_request(self):
         while True:
             temp = pickle.loads(self.s.recv(1024))
+            self.s.send(pickle.dumps("ok"))
             if temp == "END":
                 self.s.close()
                 self.print_log("SET", self.nodeNum, "", "Node Destroyed.")
@@ -65,7 +66,7 @@ class Node:
                     self.agent_in(int(req[3:]))
                 else:
                     # This is for Previous Agent
-                    self.prev_agent()
+                    self.prev_agent(int(req[4:]))
             else:
                 if req[:2] == "IN":
                     self.node_in(int(req[3:]))
@@ -102,15 +103,16 @@ class Node:
             # data structure: prevAgentNum
             prevAgentNum = data
             tgtSock.close()
-            self.ho_port += 1
+            self.hand_over_sequence_number += 1
+            self.print_log("AGENT", "", "", str(50000 + (nodeNum * 100) + self.hand_over_sequence_number))
             while True:
                 try:
                     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    sock.connect((self.host, self.ho_port))
+                    sock.connect((self.host, 50000 + (nodeNum*100) + self.hand_over_sequence_number))
                     break
-                except Exception as e:
-                    self.print_log("DBG", "", "", e)
-            sock.send(pickle.dumps(nodeNum))
+                except Exception:
+                    pass
+            sock.send(pickle.dumps(self.nodeNum))
             self.print_log("SEND", self.nodeNum, prevAgentNum,
                 "Request Node's Info to Prev Agent.")
             rcvData = sock.recv(1024)
@@ -122,20 +124,20 @@ class Node:
         self.nodeList.append(data)
         self.print_log("SET", self.nodeNum, "", "Agent Update Node List.:"+str(nodeNum))
 
-    def prev_agent(self):
-        self.ho_port += 1
-        self.print_log("GET_REQ", "NSV", self.nodeNum,
-            "Request Node info.")
+    def prev_agent(self, nodeNum):
+        self.print_log("GET_REQ", "NSV", self.nodeNum, "Request Node #" + str(nodeNum) + " info.")
+        self.hand_over_sequence_number += 1
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        sock.bind(('', self.ho_port))
+        self.print_log("PREV", "", "", str(50000 + (nodeNum*100) + self.hand_over_sequence_number))
+        sock.bind((self.host, 50000 + (nodeNum*100) + self.hand_over_sequence_number))
         sock.listen()
         tgtSock, addr = sock.accept()
         rcvData = tgtSock.recv(1024)
         node_info = pickle.loads(rcvData)
-        self.print_log("SEND", self.nodeNum, "", "Send Node #" + str(node_info) + " info.")
+        self.print_log("SEND", self.nodeNum, node_info, "Send Node #" + str(nodeNum) + " info.")
         for i in self.nodeList:
-            if i[0] == node_info:
+            if i[0] == nodeNum:
                 tgtSock.send(pickle.dumps(i))
                 self.nodeList.remove(i)
                 break
