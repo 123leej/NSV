@@ -112,9 +112,9 @@ class Node:
                     break
                 except Exception:
                     pass
-            sock.send(pickle.dumps(self.nodeNum))
             self.print_log("SEND", self.nodeNum, prevAgentNum,
                 "Request Node's Info to Prev Agent.")
+            sock.send(pickle.dumps(self.nodeNum))
             rcvData = sock.recv(1024)
             self.print_log("RECV", prevAgentNum, self.nodeNum,
                 "Receive Node's Info from Prev Agent.")
@@ -135,7 +135,7 @@ class Node:
         tgtSock, addr = sock.accept()
         rcvData = tgtSock.recv(1024)
         node_info = pickle.loads(rcvData)
-        self.print_log("SEND", self.nodeNum, node_info, "Send Node #" + str(nodeNum) + " info.")
+        #self.print_log("SEND", self.nodeNum, node_info, "Send Node #" + str(nodeNum) + " info.")
         for i in self.nodeList:
             if i[0] == nodeNum:
                 tgtSock.send(pickle.dumps(i))

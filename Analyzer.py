@@ -23,14 +23,15 @@ class Analyzer:
         agent_node = self.get_agent_nodes(json_list)
         number_of_nodes = self.get_number_of_nodes(json_list)
 
-        marker_1, sync_time_list = self.get_sync_time(json_list, agent_node, number_of_nodes)
+        marker_1, sync_in_list = self.get_sync_in(json_list, agent_node, number_of_nodes)
         marker_2, handover_time_list = self.get_handover_time(json_list, agent_node)
+        marker_3, sync_out_list = self.get_sync_out(json_list, agent_node, number_of_nodes)
 
-        self.result_1 = self.make_chart_data(number_of_nodes, sync_time_list, self.reverse_marker(marker_1), 1)
+        self.result_1 = self.make_chart_data(number_of_nodes, sync_in_list, self.reverse_marker(marker_1), 1)
         self.result_2 = self.make_chart_data(number_of_nodes, handover_time_list, self.reverse_marker(marker_2), 2)
 
         try:
-            self.average_data_1 = self.get_average_data(str(round((sum(sync_time_list) / len(sync_time_list)), 5)))
+            self.average_data_1 = self.get_average_data(str(round((sum(sync_in_list) / len(sync_in_list)), 5)))
         except ZeroDivisionError:
             self.average_data_1 = "None\n\n"
 
@@ -41,9 +42,9 @@ class Analyzer:
 
         return True
 
-    def get_sync_time(self, json_list, agent_node, number_of_nodes):
+    def get_sync_in(self, json_list, agent_node, number_of_nodes):
         marker_1 = []
-        sync_time_list = []
+        sync_in_list = []
         head_time = 0
         for i in range(0, number_of_nodes):
             if i in agent_node:
@@ -57,10 +58,30 @@ class Analyzer:
                         tmp_sync_time = tail_time - head_time
                         sync_time = float(tmp_sync_time.seconds) + round(tmp_sync_time.microseconds * 0.000001, 3)
                         marker_1.append("Node " + str(i))
-                        sync_time_list.append(sync_time)
+                        sync_in_list.append(sync_time)
                         break
 
-        return marker_1, sync_time_list
+        return marker_1, sync_in_list
+
+    def get_sync_out(self, json_list, agent_node, number_of_nodes):
+        marker_3 = []
+        sync_out_list = []
+        head_time = 0
+        for i in range(0, number_of_nodes):
+            if i not in agent_node:
+                continue
+            for json in json_list:
+                if self.find_keyword_from_log({"From": str(i)}, json_list[json]) and self.find_keyword_from_log({"Cmd": "SEND"}, json_list[json]):
+                    head_time = datetime.datetime.strptime(json_list[json]["Time"], "%H:%M:%S.%f")
+                elif self.find_keyword_from_log({"To": str(i)}, json_list[json]) and self.find_keyword_from_log({"Cmd": "RECV"}, json_list[json]):
+                    tail_time = datetime.datetime.strptime(json_list[json]["Time"], "%H:%M:%S.%f")
+                    tmp_sync_time = tail_time - head_time
+                    sync_time = float(tmp_sync_time.seconds) + round(tmp_sync_time.microseconds * 0.000001, 3)
+                    marker_3.append("Node " + str(i))
+                    sync_out_list.append(sync_time)
+                    break
+
+        return marker_3, sync_out_list
 
     # keyword = {"msg" : key} (dict)  type - 'Time''Cmd''From''To''Msg'
     def find_keyword_from_log(self, keyword, log):
@@ -167,7 +188,7 @@ class Analyzer:
         data = "Average Data: " + _msg + " seconds. \n\n"
         return data
 
-    def make_chart_data(self, _number_of_nodes, _sync_time_list, _marker, _num):
+    def make_chart_data(self, _number_of_nodes, _sync_in_list, _marker, _num):
         if _num == 1:
             chart = StackedHorizontalBarChart(
                 484,
@@ -182,7 +203,7 @@ class Analyzer:
             chart.set_axis_range('x', 0, 0.5)
             chart.set_axis_labels('x', ("", "sec"))
             chart.set_axis_labels('y', _marker)
-            chart.add_data(_sync_time_list)
+            chart.add_data(_sync_in_list)
             file_name = str(_num) + '.png'
             chart.download(file_name)
 
@@ -201,7 +222,7 @@ class Analyzer:
             chart.set_axis_range('x', 0, 0.5)
             chart.set_axis_labels('x', ("", "sec"))
             chart.set_axis_labels('y', _marker)
-            chart.add_data(_sync_time_list)
+            chart.add_data(_sync_in_list)
             file_name = str(_num) + '.png'
             chart.download(file_name)
 
