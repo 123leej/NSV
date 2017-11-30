@@ -84,7 +84,7 @@ class Analyzer:
                     tail_time = datetime.datetime.strptime(json_list[json]["Time"], "%H:%M:%S.%f")
                     tmp_sync_time = tail_time - head_time
                     sync_time = float(tmp_sync_time.seconds) + round(tmp_sync_time.microseconds * 0.000001, 3)
-                    marker_3.append("Count " + str(i))
+                    marker_3.append("Agent " + str(i))
                     sync_out_list.append(sync_time)
                     break
 
