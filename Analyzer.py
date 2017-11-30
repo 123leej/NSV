@@ -77,8 +77,6 @@ class Analyzer:
         sync_out_list = []
         head_time = 0
         for i in range(0, number_of_nodes):
-            if i not in agent_node:
-                continue
             for json in json_list:
                 if self.find_keyword_from_log({"From": str(i)}, json_list[json]) and self.find_keyword_from_log({"Cmd": "SEND"}, json_list[json]):
                     head_time = datetime.datetime.strptime(json_list[json]["Time"], "%H:%M:%S.%f")
@@ -86,7 +84,7 @@ class Analyzer:
                     tail_time = datetime.datetime.strptime(json_list[json]["Time"], "%H:%M:%S.%f")
                     tmp_sync_time = tail_time - head_time
                     sync_time = float(tmp_sync_time.seconds) + round(tmp_sync_time.microseconds * 0.000001, 3)
-                    marker_3.append("Node " + str(i))
+                    marker_3.append("Count " + str(i))
                     sync_out_list.append(sync_time)
                     break
 
