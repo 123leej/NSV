@@ -27,8 +27,6 @@ class Analyzer:
         marker_1, sync_in_list = self.get_sync_in(json_list, agent_node, number_of_nodes)
         marker_2, handover_time_list = self.get_handover_time(json_list, agent_node)
         marker_3, sync_out_list = self.get_sync_out(json_list, agent_node, number_of_nodes)
-        print(marker_3)
-        print(sync_out_list)
 
         self.result_1 = self.make_chart_data(number_of_nodes, sync_in_list, self.reverse_marker(marker_1), 1)
         self.result_2 = self.make_chart_data(number_of_nodes, handover_time_list, self.reverse_marker(marker_2), 2)
@@ -235,7 +233,7 @@ class Analyzer:
 
         elif _num == 3:
             chart = StackedHorizontalBarChart(
-                484,
+                480,
                 281,
                 x_range=(0, 0.5),
                 y_range=(0, 20),
