@@ -15,6 +15,7 @@ class Analyzer:
         self.log_file = _log_file
         self.result_1 = ""
         self.result_2 = ""
+        self.result_3 = ""
 
     def make_result_data(self):
         with open(self.log_file, 'r') as f:
@@ -26,9 +27,12 @@ class Analyzer:
         marker_1, sync_in_list = self.get_sync_in(json_list, agent_node, number_of_nodes)
         marker_2, handover_time_list = self.get_handover_time(json_list, agent_node)
         marker_3, sync_out_list = self.get_sync_out(json_list, agent_node, number_of_nodes)
+        print(marker_3)
+        print(sync_out_list)
 
         self.result_1 = self.make_chart_data(number_of_nodes, sync_in_list, self.reverse_marker(marker_1), 1)
         self.result_2 = self.make_chart_data(number_of_nodes, handover_time_list, self.reverse_marker(marker_2), 2)
+        self.result_3 = self.make_chart_data(number_of_nodes, sync_out_list, self.reverse_marker(marker_3), 3)
 
         try:
             self.average_data_1 = self.get_average_data(str(round((sum(sync_in_list) / len(sync_in_list)), 5)))
@@ -39,6 +43,11 @@ class Analyzer:
             self.average_data_2 = self.get_average_data(str(round((sum(handover_time_list) / len(handover_time_list)), 5)))
         except ZeroDivisionError:
             self.average_data_2 = "None\n\n"
+
+        try:
+            self.average_data_3 = self.get_average_data(str(round((sum(sync_out_list) / len(sync_out_list)), 5)))
+        except ZeroDivisionError:
+            self.average_data_3 = "None\n\n"
 
         return True
 
@@ -188,7 +197,7 @@ class Analyzer:
         data = "Average Data: " + _msg + " seconds. \n\n"
         return data
 
-    def make_chart_data(self, _number_of_nodes, _sync_in_list, _marker, _num):
+    def make_chart_data(self, _number_of_nodes, _data_list, _marker, _num):
         if _num == 1:
             chart = StackedHorizontalBarChart(
                 484,
@@ -203,7 +212,7 @@ class Analyzer:
             chart.set_axis_range('x', 0, 0.5)
             chart.set_axis_labels('x', ("", "sec"))
             chart.set_axis_labels('y', _marker)
-            chart.add_data(_sync_in_list)
+            chart.add_data(_data_list)
             file_name = str(_num) + '.png'
             chart.download(file_name)
 
@@ -222,7 +231,25 @@ class Analyzer:
             chart.set_axis_range('x', 0, 0.5)
             chart.set_axis_labels('x', ("", "sec"))
             chart.set_axis_labels('y', _marker)
-            chart.add_data(_sync_in_list)
+            chart.add_data(_data_list)
+            file_name = str(_num) + '.png'
+            chart.download(file_name)
+
+        elif _num == 3:
+            chart = StackedHorizontalBarChart(
+                484,
+                281,
+                x_range=(0, 0.5),
+                y_range=(0, 20),
+                colours=['ff0000', 'ff4000', 'ff8000', 'ffbf00', 'ffff00', 'bfff00', '80ff00', '40ff00', '00ff00',
+                         '00ff40', '00ff80', '00ffbf', '00ffff', '00bfff', '0080ff', '0040ff', '0000ff', '4000ff',
+                         '8000ff', 'bf00ff', 'ff00ff', 'ff00bf', 'ff0080', 'ff0040']
+            )
+            chart.set_bar_width(10)
+            chart.set_axis_range('x', 0, 0.5)
+            chart.set_axis_labels('x', ("", "sec"))
+            chart.set_axis_labels('y', _marker)
+            chart.add_data(_data_list)
             file_name = str(_num) + '.png'
             chart.download(file_name)
 
@@ -246,7 +273,11 @@ class Analyzer:
         return str(result)
 
     def result_text(self):
-        return [self.average_data_1 + self.get_log_to_string(), self.average_data_2 + self.get_log_to_string()]
+        return [
+            self.average_data_1 + self.get_log_to_string(),
+            self.average_data_2 + self.get_log_to_string(),
+            self.average_data_3 + self.get_log_to_string()
+        ]
 
     def start(self, dialog):
-        self.window = AnalysisResultUi(dialog, self.result_1, self.result_2, self.result_text())
+        self.window = AnalysisResultUi(dialog, self.result_1, self.result_2, self.result_3, self.result_text())
