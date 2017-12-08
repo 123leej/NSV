@@ -33,17 +33,17 @@ class Analyzer:
         self.result_3 = self.make_chart_data(number_of_nodes, sync_out_list, self.reverse_marker(marker_3), 3)
 
         try:
-            self.average_data_1 = self.get_average_data(str(round((sum(sync_in_list) / len(sync_in_list)), 5)))
+            self.average_data_1 = self.get_average_data(str(round((sum(sync_in_list) / len(sync_in_list)), 4)))
         except ZeroDivisionError:
             self.average_data_1 = "None\n\n"
 
         try:
-            self.average_data_2 = self.get_average_data(str(round((sum(handover_time_list) / len(handover_time_list)), 5)))
+            self.average_data_2 = self.get_average_data(str(round((sum(handover_time_list) / len(handover_time_list)), 4)))
         except ZeroDivisionError:
             self.average_data_2 = "None\n\n"
 
         try:
-            self.average_data_3 = self.get_average_data(str(round((sum(sync_out_list) / len(sync_out_list)), 5)))
+            self.average_data_3 = self.get_average_data(str(round((sum(sync_out_list) / len(sync_out_list)), 4)))
         except ZeroDivisionError:
             self.average_data_3 = "None\n\n"
 
@@ -63,7 +63,7 @@ class Analyzer:
                     elif self.find_keyword_from_log({"Msg": "Agent Update."}, json_list[json]):
                         tail_time = datetime.datetime.strptime(json_list[json]["Time"], "%H:%M:%S.%f")
                         tmp_sync_time = tail_time - head_time
-                        sync_time = float(tmp_sync_time.seconds) + round(tmp_sync_time.microseconds * 0.000001, 3)
+                        sync_time = float(tmp_sync_time.seconds) + round(tmp_sync_time.microseconds * 0.000001, 4)
                         marker_1.append("Node " + str(i))
                         sync_in_list.append(sync_time)
                         break
@@ -81,7 +81,7 @@ class Analyzer:
                 elif self.find_keyword_from_log({"To": str(i)}, json_list[json]) and self.find_keyword_from_log({"Cmd": "RECV"}, json_list[json]):
                     tail_time = datetime.datetime.strptime(json_list[json]["Time"], "%H:%M:%S.%f")
                     tmp_sync_time = tail_time - head_time
-                    sync_time = float(tmp_sync_time.seconds) + round(tmp_sync_time.microseconds * 0.000001, 3)
+                    sync_time = float(tmp_sync_time.seconds) + round(tmp_sync_time.microseconds * 0.000001, 4)
                     marker_3.append("Agent " + str(i))
                     sync_out_list.append(sync_time)
                     break
@@ -178,7 +178,7 @@ class Analyzer:
         for i in range(0, len(hand_over_buffer)):
             temp = datetime.datetime.strptime(hand_over_end_data[i]['Time'], "%H:%M:%S.%f") - \
                    datetime.datetime.strptime(hand_over_start_data[i]['Time'], "%H:%M:%S.%f")
-            hand_over_time.append(float(temp.seconds) + round(temp.microseconds * 0.000001, 3))
+            hand_over_time.append(float(temp.seconds) + round(temp.microseconds * 0.000001, 4))
             if agent.index(hand_over_end_data[i]["From"]) is 0:
                 temp = 1
             if agent.index(hand_over_end_data[i]["From"]) is 1:

@@ -1,6 +1,7 @@
 from sys import argv
 import socket
 import pickle
+import time
 import threading
 from datetime import datetime
 
@@ -116,6 +117,7 @@ class Node:
                 "Request Node's Info to Prev Agent.")
             sock.send(pickle.dumps(self.nodeNum))
             rcvData = sock.recv(1024)
+            time.sleep(0.2)
             self.print_log("RECV", prevAgentNum, self.nodeNum,
                 "Receive Node's Info from Prev Agent.")
             data = pickle.loads(rcvData)
@@ -143,6 +145,7 @@ class Node:
                 break
         tgtSock.close()
         sock.close()
+        time.sleep(0.3)
         self.print_log("SET", self.nodeNum, "", "Prev Agent Delete Node.")
 
     def node_in(self, nodeNum):
@@ -157,6 +160,7 @@ class Node:
             try:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 sock.connect((self.host, 40000 + (nodeNum*100) + self.nodeNum))
+                time.sleep(0.1)
                 break
             except Exception:
                 pass
@@ -169,6 +173,7 @@ class Node:
         sock.close()
         self.recentAgent = nodeNum
         self.agentInfo = [nodeNum, 20000+nodeNum]
+        time.sleep(0.2)
         self.print_log("SET", self.nodeNum, "", "Agent Update.")
 
     def node_out(self):

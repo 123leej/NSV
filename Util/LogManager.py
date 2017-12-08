@@ -70,5 +70,9 @@ class LogManager:
     def time_to_stamp(self, _log):
         temp = _log.split("|")[0]
         temp = "2017:" + temp
-        stamp = time.mktime(datetime.datetime.strptime(temp, "%Y:%H:%M:%S.%f").timetuple())
-        return stamp
+        result = int(temp.split(".")[1])*0.000001
+        stamp = datetime.datetime.strptime(temp, "%Y:%H:%M:%S.%f").timetuple()
+        result += stamp[5]
+        result += stamp[4]*60
+        result += stamp[3]*3600
+        return result
