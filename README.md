@@ -46,6 +46,6 @@ if you installed new package in virtual environment you have to update requireme
 * [Python3](https://www.python.org/) - NSV development language
 * [Qt designer](https://www.qt.io/) - Make Gui for Python
 
-##LICENSE
+## LICENSE
 * This project is patented.
 * Copyright(c)2017 [INNS LAB](http://inns.konkuk.ac.kr) All rights reserved. 
